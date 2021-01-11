@@ -1,0 +1,35 @@
+# This runs featureCounts and makes a count table based on the output
+rule count:
+    input:
+        expand(
+            "{results}/star_{trim_method}/{sample}_Aligned.sortedByCoord.out.bam",
+            sample = SAMPLES
+        )    
+    output:
+        "{results}/featureCount_{trim_method}/{sample}_countsOutput"
+    params:
+        job_name = "counts",
+        memory = "select[mem>8] rusage[mem=8]",
+        gtf=GTF,
+        output_file="countsOutput",
+        opts = CMD_PARAMS["featureCounts"]
+    log:
+        "{results}/logs/{sample}_{trim_method}_featureCounts"
+    shell:
+        """
+        featureCounts \
+        {params.opts} \
+        -a {params.gtf} \
+        -o {output} \
+		"""
+
+rule count_table:
+    input:
+        expand(
+            "{results}/featureCount_{trim_method}/{sample}_countsOutput",
+            sample=SAMPLE_LIST
+        )
+    output:
+        "{results}/{project}_countTable.txt"
+    script:
+        "scripts/countTable.py"

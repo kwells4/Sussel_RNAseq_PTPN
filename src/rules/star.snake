@@ -21,14 +21,14 @@ def _get_input(wildcards):
 def _get_input_star(wildcards):
     # Grab path of the fastq file
     fastq1 = (wildcards.results + "/" + wildcards.trim_method + "/" + wildcards.sample +
-        "_R1_" + wildcards.trim_method + "_trimmed.fastq")
+        "_R1_trimmed.fastq.gz")
     # Make sure file exists
     if wildcards.trim_method != "no":
         fastq1  = _check_path(fastq1)
     if IS_PAIRED:
         # Grab path of second read
         fastq2 = (wildcards.results + "/" + wildcards.trim_method + "/" + wildcards.sample +
-            "_R2_" + wildcards.trim_method + "_trimmed.fastq")
+            "_R2_trimmed.fastq.gz")
         # Make sure file exists
         if wildcards.trim_method != "no":
             fastq2 = _check_path(fastq2)
@@ -40,24 +40,24 @@ rule align:
     input:
         "{results}/logs/{trim_method}_trim_{sample}.txt"
     output:
-        "{results}/star_{trim_method}/{sample}_Aligned.sortedByCoord.out.bam"
+        "{results}/star_{trim_method}_trim/{sample}_Aligned.sortedByCoord.out.bam"
     params:
         job_name      = "{sample}_star",
         memory        = "select[mem>60] rusage[mem=60]",
         genome        = GENOME,
         gtf           = GTF,
-        output_prefix = "{results}/star_{trim_method}/{sample}_",
+        output_prefix = "{results}/star_{trim_method}_trim/{sample}_",
         fastqs_trim   = _get_input_star,
         fastqs        = _get_input,
         trim_method   = "{trim_method}"
     log:
-        "{results}/logs/star_{sample}_{trim_method}"
+        "{results}/logs/star_{sample}_{trim_method}_trim"
     message:
         "Aligning reads for {wildcards.sample}"
     threads:
         6
     run:
-        if trim_method == "no":
+        if params.trim_method == "no":
             shell(    
                 """
                 module load STAR/2.5.2a

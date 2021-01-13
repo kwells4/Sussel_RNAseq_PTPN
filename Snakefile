@@ -73,23 +73,24 @@ rule all:
             "{results}/logs/{trim_method}_trim_{sample}.txt",
             results = RESULTS, sample = SAMPLES,
             trim_method = TRIM_METHOD),
-        # # STAR output
+        # STAR output
         expand(
-            "{results}/star_{trim_method}/{sample}_Aligned.sortedByCoord.out.bam",
+            "{results}/star_{trim_method}_trim/{sample}_Aligned.sortedByCoord.out.bam",
             results = RESULTS, sample = SAMPLES,
             trim_method = TRIM_METHOD
             ),
-        # # featureCounts output
+        # featureCounts output
         expand(
-            "{results}/featureCount_{trim_method}/{sample}_countsOutput",
+            "{results}/featureCount_{trim_method}_trim/{sample}_countsOutput",
             results = RESULTS, sample = SAMPLES,
             trim_method = TRIM_METHOD
             ),
 
-        # # Count table
+        # Count table
         expand(
-            "{results}/{project}_countTable.txt",
-            results = RESULTS, project = PROJECT
+            "{results}/{project}_countTable_{trim_method}.txt",
+            results = RESULTS, project = PROJECT,
+            trim_method = TRIM_METHOD
             )
 
 # Snakes to run

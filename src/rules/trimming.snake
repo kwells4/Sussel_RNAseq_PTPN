@@ -1,6 +1,6 @@
 # Run bbduk to remove adaptors
 # Find an example of running bbduk here:
-	# https://jgi.doe.gov/data-and-tools/bbtools/bb-tools-user-guide/bbduk-guide/
+    # https://jgi.doe.gov/data-and-tools/bbtools/bb-tools-user-guide/bbduk-guide/
 # There is an adapter trimming usage example
 
 # Function to return paths of input files
@@ -25,51 +25,55 @@ def _get_input(wildcards):
 
 rule bbduk:
     input:
-    	input_list = _get_input
+        input_list   = _get_input,
+        fastqc_output = "{results}/fastqc/fastqc_{sample}.txt"
     output:
-    	"{results}/logs/{sample}_bbduk.txt"
+        "{results}/logs/bbduk_trim_{sample}.txt"
     params:
-    	ref      = ADAPTORS,
-    	opts     = CMD_PARAMS["bbduk"],
-    	fastq1   = "{results}/bbduk/{sample}_R1_bbduk_trimmed.fastq",
-    	fastq2   = "{results}/bbduk/{sample}_R2_bbduk_trimmed.fastq",
-    	job_name = "{sample}_bbduk",
+        ref      = ADAPTORS,
+        opts     = CMD_PARAMS["bbduk"],
+        fastq1   = "{results}/bbduk/{sample}_R1_bbduk_trimmed.fastq",
+        fastq2   = "{results}/bbduk/{sample}_R2_bbduk_trimmed.fastq",
+        job_name = "{sample}_bbduk",
         memory   = "select[mem>4] rusage[mem=4]"
     log:
-    	"{results}/logs/{sample}_bbduk"
+        "{results}/logs/bbduk_{sample}"
     run:
-    	if IS_PAIRED:
-    		shell(
-		        '''
-		        bbduk.sh \
-		        in1   = {input.input_list[0]} \
-		        in2   = {input.input_list[1]} \
-		        out1  = {output.fastq1} \
-		        out2  = {output.fastq2} \
-		        ref   = {params.ref} \
-		        {params.opts}
-		        '''
-    		)
-    	else:
-    		shell(
-    			'''
-    			bbduk.sh \
-		        in1   = {input.input_list[0]} \
-		        out1  = {output.fastq1} \
-		        ref   = {params.ref} \
-		        {params.opts}
-		        '''
-    		)
-    	with open(output[0]) as out:
-    		out.write("done/n")
+        if IS_PAIRED:
+            shell(
+                '''
+                bbduk.sh \
+                in1   = {input.input_list[0]} \
+                in2   = {input.input_list[1]} \
+                out1  = {params.fastq1} \
+                out2  = {params.fastq2} \
+                ref   = {params.ref} \
+                {params.opts}
+                '''
+            )
+        else:
+            shell(
+                '''
+                bbduk.sh \
+                in1   = {input.input_list[0]} \
+                out1  = {params.fastq1} \
+                ref   = {params.ref} \
+                {params.opts}
+                '''
+            )
+        with open(output[0]) as out:
+            out.write("done with bbduk trimming/n")
 
 
 rule no_trim:
     input:
-        input_list = _get_input
-    ouput:
-        "{results}/logs/{sample}_none.txt"
+        input_list = _get_input,
+        fastqc_output = "{results}/fastqc/fastqc_{sample}.txt"
+    output:
+        "{results}/logs/no_trim_{sample}.txt"
+    params:
+        job_name = "{sample}_noTrim",
+        memory = "select[mem>1] rusage[mem=1]"
     run:
-        with open({output}) as out:
+        with open(output[0], "w") as out:
             out.write("No trimming done on these samples\n")
-

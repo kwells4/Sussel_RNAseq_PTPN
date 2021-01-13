@@ -33,6 +33,7 @@ if "spike_in" in SAMPLE_LIST.columns:
     NON_SPIKE_SAMPLES = SAMPLE_LIST[~SAMPLE_LIST.spike_in].index.values
 else:
     NON_SPIKE_SAMPLES = SAMPLE_LIST
+    SPIKE_SAMPLES = []
 
 if IS_PAIRED:
     CMD_PARAMS = config["PE"]
@@ -65,27 +66,27 @@ rule all:
     input:
     	# QC output
     	expand(
-    		"{results}/fastqc/{sample}_fastqc.txt",
+    		"{results}/fastqc/fastqc_{sample}.txt",
     		results = RESULTS, sample = SAMPLES),
         # Output of adaptor trimming
         expand(
-            "{results}/logs/{sample}_{trim_method}",
+            "{results}/logs/{trim_method}_trim_{sample}.txt",
             results = RESULTS, sample = SAMPLES,
-            trim_method = TRIM_METHOD)
-        # STAR output
+            trim_method = TRIM_METHOD),
+        # # STAR output
         expand(
             "{results}/star_{trim_method}/{sample}_Aligned.sortedByCoord.out.bam",
             results = RESULTS, sample = SAMPLES,
             trim_method = TRIM_METHOD
-            )
-        # featureCounts output
+            ),
+        # # featureCounts output
         expand(
-            "{results}/featureCount_{trim_method}/{sample}_countOutput",
+            "{results}/featureCount_{trim_method}/{sample}_countsOutput",
             results = RESULTS, sample = SAMPLES,
             trim_method = TRIM_METHOD
-            )
+            ),
 
-        # Count table
+        # # Count table
         expand(
             "{results}/{project}_countTable.txt",
             results = RESULTS, project = PROJECT
@@ -96,4 +97,3 @@ include: "src/rules/fastqc.snake"
 include: "src/rules/trimming.snake"
 include: "src/rules/star.snake"
 include: "src/rules/featurecounts.snake"
-

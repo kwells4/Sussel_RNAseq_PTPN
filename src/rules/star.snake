@@ -23,20 +23,22 @@ def _get_input_star(wildcards):
     fastq1 = (wildcards.results + "/" + wildcards.trim_method + "/" + wildcards.sample +
         "_R1_" + wildcards.trim_method + "_trimmed.fastq")
     # Make sure file exists
-    fastq1  = _check_path(fastq1)
+    if wildcards.trim_method != "no":
+        fastq1  = _check_path(fastq1)
     if IS_PAIRED:
         # Grab path of second read
         fastq2 = (wildcards.results + "/" + wildcards.trim_method + "/" + wildcards.sample +
             "_R2_" + wildcards.trim_method + "_trimmed.fastq")
         # Make sure file exists
-        fastq2 = _check_path(fastq2)
+        if wildcards.trim_method != "no":
+            fastq2 = _check_path(fastq2)
         return(fastq1, fastq2)
     else:
         return(fastq1)
 
-rule align_no_adapt:
+rule align:
     input:
-        "{results}/logs/{sample}_{trim_method}"
+        "{results}/logs/{trim_method}_trim_{sample}.txt"
     output:
         "{results}/star_{trim_method}/{sample}_Aligned.sortedByCoord.out.bam"
     params:
@@ -49,13 +51,13 @@ rule align_no_adapt:
         fastqs        = _get_input,
         trim_method   = "{trim_method}"
     log:
-        "{results}/logs/{sample}_{trim_method}_star"
+        "{results}/logs/star_{sample}_{trim_method}"
     message:
         "Aligning reads for {wildcards.sample}"
     threads:
         6
     run:
-        if trim_method == "none":
+        if trim_method == "no":
             shell(    
                 """
                 module load STAR/2.5.2a

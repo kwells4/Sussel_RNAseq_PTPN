@@ -6,8 +6,8 @@
 # done, another columen should be titled "fastq2" with filenames for read 2.
 # If spike-ins were included another column can be spike-in with True/False
 # values and you must include paths for the COMBINED_GENOME and COMBINED_GTF
-SAMPLE_TABLE: 
-   "files/samples.tsv"
+SAMPLE_TABLE:
+  "files/samples.tsv"
 
 # Project the name of the project
 PROJECT:
@@ -15,7 +15,7 @@ PROJECT:
 
 # Reference. This should be the path to a directory created using star
 GENOME:
-
+  /beevol/home/rbilab/ref/indices/star/mouse/GRCm38
 
 # Combined genome if spike-ins were used. This should be a path to a combined index using
 # star. Can leave blank if no spike-ins were used.
@@ -23,6 +23,7 @@ COMBINED_GENOME:
 
 # GTF. This is a path to the gtf file. Should match the genome fa used
 GTF:
+  /beevol/home/rbilab/ref/annotation/mouse/GRCm38/gtf/Mus_musculus.GRCm38.96.gtf
 
 # Combined gtf if spike-ins were used. Should match the genome fa used.
 # Can leave blank if no spike-ins were used.
@@ -33,12 +34,13 @@ RESULTS:
   "results"
 
 # Path to adaptors file. This is included in the bbtools package under .../bbmap/resources/adaptors.fa
+# Not necessary if not using bbduk for trimming
 ADAPTORS:
-   "/cluster/software/modules-sw/BBMap/bbmap_38.86/resources/adaptors.fa"
 
-# Trim method, can be "bbduk", "cutadapt", or none
+
+# Trim method, can be "bbduk", "cutadapt", or "no"
 TRIM_METHOD:
-   "none"
+  "no"
 
 # Parameters for paired end or single end experiments
 PE:

@@ -23,14 +23,14 @@ rule fastqc:
     input:
         input_list = _get_input
     output:
-        "{results}/fastqc/{sample}_fastqc.txt"
+        file      = "{results}/fastqc/fastqc_{sample}.txt"
     params:
-        output_dir  = "fastqc/",
+        output_dir  = "{results}/fastqc/",
         sample_name = "{sample}",
         job_name    = "{sample}_fastqc",
         memory      = "select[mem>16] rusage[mem=16]"
     log:
-        "{results}/log/{sample}_fastqc"
+        "{results}/logs/fastqc_{sample}"
     shell:
         """
         fastqc {input} --outdir {params.output_dir}

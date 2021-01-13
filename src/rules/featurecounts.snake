@@ -3,7 +3,7 @@ rule count:
     input:
         expand(
             "{results}/star_{trim_method}/{sample}_Aligned.sortedByCoord.out.bam",
-            sample = SAMPLES
+            sample = SAMPLES, trim_method = TRIM_METHOD, results = RESULTS
         )    
     output:
         "{results}/featureCount_{trim_method}/{sample}_countsOutput"
@@ -14,7 +14,7 @@ rule count:
         output_file="countsOutput",
         opts = CMD_PARAMS["featureCounts"]
     log:
-        "{results}/logs/{sample}_{trim_method}_featureCounts"
+        "{results}/logs/featureCounts_{sample}_{trim_method}"
     shell:
         """
         featureCounts \
@@ -27,7 +27,7 @@ rule count_table:
     input:
         expand(
             "{results}/featureCount_{trim_method}/{sample}_countsOutput",
-            sample=SAMPLE_LIST
+            sample=SAMPLE_LIST, trim_method = TRIM_METHOD, results = RESULTS
         )
     output:
         "{results}/{project}_countTable.txt"

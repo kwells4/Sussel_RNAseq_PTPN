@@ -28,7 +28,7 @@ rule count_table:
             sample=SAMPLES, trim_method = TRIM_METHOD, results = RESULTS
         )
     output:
-        "{results}/{project}_countTable_{trim_method}.txt"
+        "{results}/{project}_countTable_{trim_method}_trim.txt"
     params:
         job_name    = "count_table",
         memory      = "select[mem > 1] rusage[mem=1]",

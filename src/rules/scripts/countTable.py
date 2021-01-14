@@ -19,10 +19,12 @@ for i in file_list:
 	with open(i, "r") as countFile:
 		for line in countFile:
 			line = line.strip().split("\t")
-			if "ENSMUSG" in line[0]:
-				gene = line[6]
-				count = line[8]
-				gene_dict[gene].append(count)
+				if "ENSMUSG" in line[0]:
+					ens_id = line[0]
+					gene = line[6]
+					count = line[8]
+					gene_ens = gene + "_" + ens_id
+					gene_dict[gene_ens].append(count)
 
 with open(output_file, "w") as count_file:
 	count_file.write("gene" + "\t" + "\t".join(sample_list) + "\n")

@@ -88,7 +88,7 @@ rule all:
 
         # Count table
         expand(
-            "{results}/{project}_countTable_{trim_method}.txt",
+            "{results}/{project}_countTable_{trim_method}_trim.txt",
             results = RESULTS, project = PROJECT,
             trim_method = TRIM_METHOD
             )

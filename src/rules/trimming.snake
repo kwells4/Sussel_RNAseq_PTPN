@@ -64,6 +64,46 @@ rule bbduk:
         with open(output[0]) as out:
             out.write("done with bbduk trimming/n")
 
+""" Rules for trimming reads with cutadapt """
+# Run cutadapt for single-end reads
+rule cutadapt:
+    input:
+        _get_fqs
+    output:
+        "{results}/logs/cutadapt_trim_{sample}.txt"
+    params:
+        job_name = "{sample}_cutadapt",
+        memory   = "select[mem>4] rusage[mem=4]",
+        settings = CMD_PARAMS["cutadapt"],
+        fastq1   = "{results}/bbduk/{sample}_R1_bbduk_trimmed.fastq",
+        fastq2   = "{results}/bbduk/{sample}_R2_bbduk_trimmed.fastq"
+    log:
+        "{reults}/logs/cutadapt_{sample}"
+    message:
+        "Trimming illumina adapters for {wildcards.sample}" 
+    threads:
+        1
+    run:
+        if IS_PAIRED:
+            shell(
+                """
+                cutadapt \
+                    {params.settings} \
+                    -o {params.fastq1} \
+                    -p {params.fastq2} \
+                    {input[0]}  \
+                    {input[1]}
+                """
+            )
+        else:
+            shell(
+                """
+                cutadapt \
+                    {params.settings} \
+                    -o {output} \
+                    {input[0]} 
+                """
+            )
 
 rule no_trim:
     input:

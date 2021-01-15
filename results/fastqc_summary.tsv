@@ -1,0 +1,264 @@
+PASS	Basic Statistics	KO_1_NonTreatment_S29_L002_R1_001.fastq.gz
+PASS	Per base sequence quality	KO_1_NonTreatment_S29_L002_R1_001.fastq.gz
+WARN	Per tile sequence quality	KO_1_NonTreatment_S29_L002_R1_001.fastq.gz
+PASS	Per sequence quality scores	KO_1_NonTreatment_S29_L002_R1_001.fastq.gz
+WARN	Per base sequence content	KO_1_NonTreatment_S29_L002_R1_001.fastq.gz
+PASS	Per sequence GC content	KO_1_NonTreatment_S29_L002_R1_001.fastq.gz
+PASS	Per base N content	KO_1_NonTreatment_S29_L002_R1_001.fastq.gz
+PASS	Sequence Length Distribution	KO_1_NonTreatment_S29_L002_R1_001.fastq.gz
+FAIL	Sequence Duplication Levels	KO_1_NonTreatment_S29_L002_R1_001.fastq.gz
+WARN	Overrepresented sequences	KO_1_NonTreatment_S29_L002_R1_001.fastq.gz
+FAIL	Adapter Content	KO_1_NonTreatment_S29_L002_R1_001.fastq.gz
+PASS	Basic Statistics	KO_1_NonTreatment_S29_L002_R2_001.fastq.gz
+PASS	Per base sequence quality	KO_1_NonTreatment_S29_L002_R2_001.fastq.gz
+PASS	Per tile sequence quality	KO_1_NonTreatment_S29_L002_R2_001.fastq.gz
+PASS	Per sequence quality scores	KO_1_NonTreatment_S29_L002_R2_001.fastq.gz
+FAIL	Per base sequence content	KO_1_NonTreatment_S29_L002_R2_001.fastq.gz
+FAIL	Per sequence GC content	KO_1_NonTreatment_S29_L002_R2_001.fastq.gz
+PASS	Per base N content	KO_1_NonTreatment_S29_L002_R2_001.fastq.gz
+PASS	Sequence Length Distribution	KO_1_NonTreatment_S29_L002_R2_001.fastq.gz
+FAIL	Sequence Duplication Levels	KO_1_NonTreatment_S29_L002_R2_001.fastq.gz
+WARN	Overrepresented sequences	KO_1_NonTreatment_S29_L002_R2_001.fastq.gz
+FAIL	Adapter Content	KO_1_NonTreatment_S29_L002_R2_001.fastq.gz
+PASS	Basic Statistics	KO_2_NonTreatment_S30_L002_R1_001.fastq.gz
+PASS	Per base sequence quality	KO_2_NonTreatment_S30_L002_R1_001.fastq.gz
+WARN	Per tile sequence quality	KO_2_NonTreatment_S30_L002_R1_001.fastq.gz
+PASS	Per sequence quality scores	KO_2_NonTreatment_S30_L002_R1_001.fastq.gz
+WARN	Per base sequence content	KO_2_NonTreatment_S30_L002_R1_001.fastq.gz
+WARN	Per sequence GC content	KO_2_NonTreatment_S30_L002_R1_001.fastq.gz
+PASS	Per base N content	KO_2_NonTreatment_S30_L002_R1_001.fastq.gz
+PASS	Sequence Length Distribution	KO_2_NonTreatment_S30_L002_R1_001.fastq.gz
+FAIL	Sequence Duplication Levels	KO_2_NonTreatment_S30_L002_R1_001.fastq.gz
+WARN	Overrepresented sequences	KO_2_NonTreatment_S30_L002_R1_001.fastq.gz
+FAIL	Adapter Content	KO_2_NonTreatment_S30_L002_R1_001.fastq.gz
+PASS	Basic Statistics	KO_2_NonTreatment_S30_L002_R2_001.fastq.gz
+PASS	Per base sequence quality	KO_2_NonTreatment_S30_L002_R2_001.fastq.gz
+PASS	Per tile sequence quality	KO_2_NonTreatment_S30_L002_R2_001.fastq.gz
+PASS	Per sequence quality scores	KO_2_NonTreatment_S30_L002_R2_001.fastq.gz
+FAIL	Per base sequence content	KO_2_NonTreatment_S30_L002_R2_001.fastq.gz
+FAIL	Per sequence GC content	KO_2_NonTreatment_S30_L002_R2_001.fastq.gz
+PASS	Per base N content	KO_2_NonTreatment_S30_L002_R2_001.fastq.gz
+PASS	Sequence Length Distribution	KO_2_NonTreatment_S30_L002_R2_001.fastq.gz
+FAIL	Sequence Duplication Levels	KO_2_NonTreatment_S30_L002_R2_001.fastq.gz
+WARN	Overrepresented sequences	KO_2_NonTreatment_S30_L002_R2_001.fastq.gz
+FAIL	Adapter Content	KO_2_NonTreatment_S30_L002_R2_001.fastq.gz
+PASS	Basic Statistics	KO_3_NonTreatment_S31_L002_R1_001.fastq.gz
+PASS	Per base sequence quality	KO_3_NonTreatment_S31_L002_R1_001.fastq.gz
+WARN	Per tile sequence quality	KO_3_NonTreatment_S31_L002_R1_001.fastq.gz
+PASS	Per sequence quality scores	KO_3_NonTreatment_S31_L002_R1_001.fastq.gz
+WARN	Per base sequence content	KO_3_NonTreatment_S31_L002_R1_001.fastq.gz
+WARN	Per sequence GC content	KO_3_NonTreatment_S31_L002_R1_001.fastq.gz
+PASS	Per base N content	KO_3_NonTreatment_S31_L002_R1_001.fastq.gz
+PASS	Sequence Length Distribution	KO_3_NonTreatment_S31_L002_R1_001.fastq.gz
+FAIL	Sequence Duplication Levels	KO_3_NonTreatment_S31_L002_R1_001.fastq.gz
+WARN	Overrepresented sequences	KO_3_NonTreatment_S31_L002_R1_001.fastq.gz
+FAIL	Adapter Content	KO_3_NonTreatment_S31_L002_R1_001.fastq.gz
+PASS	Basic Statistics	KO_3_NonTreatment_S31_L002_R2_001.fastq.gz
+PASS	Per base sequence quality	KO_3_NonTreatment_S31_L002_R2_001.fastq.gz
+PASS	Per tile sequence quality	KO_3_NonTreatment_S31_L002_R2_001.fastq.gz
+PASS	Per sequence quality scores	KO_3_NonTreatment_S31_L002_R2_001.fastq.gz
+FAIL	Per base sequence content	KO_3_NonTreatment_S31_L002_R2_001.fastq.gz
+FAIL	Per sequence GC content	KO_3_NonTreatment_S31_L002_R2_001.fastq.gz
+PASS	Per base N content	KO_3_NonTreatment_S31_L002_R2_001.fastq.gz
+PASS	Sequence Length Distribution	KO_3_NonTreatment_S31_L002_R2_001.fastq.gz
+FAIL	Sequence Duplication Levels	KO_3_NonTreatment_S31_L002_R2_001.fastq.gz
+WARN	Overrepresented sequences	KO_3_NonTreatment_S31_L002_R2_001.fastq.gz
+FAIL	Adapter Content	KO_3_NonTreatment_S31_L002_R2_001.fastq.gz
+PASS	Basic Statistics	KO_4_CytokineTreatment_S35_L002_R1_001.fastq.gz
+PASS	Per base sequence quality	KO_4_CytokineTreatment_S35_L002_R1_001.fastq.gz
+WARN	Per tile sequence quality	KO_4_CytokineTreatment_S35_L002_R1_001.fastq.gz
+PASS	Per sequence quality scores	KO_4_CytokineTreatment_S35_L002_R1_001.fastq.gz
+WARN	Per base sequence content	KO_4_CytokineTreatment_S35_L002_R1_001.fastq.gz
+WARN	Per sequence GC content	KO_4_CytokineTreatment_S35_L002_R1_001.fastq.gz
+PASS	Per base N content	KO_4_CytokineTreatment_S35_L002_R1_001.fastq.gz
+PASS	Sequence Length Distribution	KO_4_CytokineTreatment_S35_L002_R1_001.fastq.gz
+FAIL	Sequence Duplication Levels	KO_4_CytokineTreatment_S35_L002_R1_001.fastq.gz
+WARN	Overrepresented sequences	KO_4_CytokineTreatment_S35_L002_R1_001.fastq.gz
+FAIL	Adapter Content	KO_4_CytokineTreatment_S35_L002_R1_001.fastq.gz
+PASS	Basic Statistics	KO_4_CytokineTreatment_S35_L002_R2_001.fastq.gz
+PASS	Per base sequence quality	KO_4_CytokineTreatment_S35_L002_R2_001.fastq.gz
+PASS	Per tile sequence quality	KO_4_CytokineTreatment_S35_L002_R2_001.fastq.gz
+PASS	Per sequence quality scores	KO_4_CytokineTreatment_S35_L002_R2_001.fastq.gz
+FAIL	Per base sequence content	KO_4_CytokineTreatment_S35_L002_R2_001.fastq.gz
+FAIL	Per sequence GC content	KO_4_CytokineTreatment_S35_L002_R2_001.fastq.gz
+PASS	Per base N content	KO_4_CytokineTreatment_S35_L002_R2_001.fastq.gz
+PASS	Sequence Length Distribution	KO_4_CytokineTreatment_S35_L002_R2_001.fastq.gz
+FAIL	Sequence Duplication Levels	KO_4_CytokineTreatment_S35_L002_R2_001.fastq.gz
+WARN	Overrepresented sequences	KO_4_CytokineTreatment_S35_L002_R2_001.fastq.gz
+FAIL	Adapter Content	KO_4_CytokineTreatment_S35_L002_R2_001.fastq.gz
+PASS	Basic Statistics	KO_5_CytokineTreatment_S36_L002_R1_001.fastq.gz
+PASS	Per base sequence quality	KO_5_CytokineTreatment_S36_L002_R1_001.fastq.gz
+WARN	Per tile sequence quality	KO_5_CytokineTreatment_S36_L002_R1_001.fastq.gz
+PASS	Per sequence quality scores	KO_5_CytokineTreatment_S36_L002_R1_001.fastq.gz
+WARN	Per base sequence content	KO_5_CytokineTreatment_S36_L002_R1_001.fastq.gz
+WARN	Per sequence GC content	KO_5_CytokineTreatment_S36_L002_R1_001.fastq.gz
+PASS	Per base N content	KO_5_CytokineTreatment_S36_L002_R1_001.fastq.gz
+PASS	Sequence Length Distribution	KO_5_CytokineTreatment_S36_L002_R1_001.fastq.gz
+FAIL	Sequence Duplication Levels	KO_5_CytokineTreatment_S36_L002_R1_001.fastq.gz
+WARN	Overrepresented sequences	KO_5_CytokineTreatment_S36_L002_R1_001.fastq.gz
+FAIL	Adapter Content	KO_5_CytokineTreatment_S36_L002_R1_001.fastq.gz
+PASS	Basic Statistics	KO_5_CytokineTreatment_S36_L002_R2_001.fastq.gz
+PASS	Per base sequence quality	KO_5_CytokineTreatment_S36_L002_R2_001.fastq.gz
+PASS	Per tile sequence quality	KO_5_CytokineTreatment_S36_L002_R2_001.fastq.gz
+PASS	Per sequence quality scores	KO_5_CytokineTreatment_S36_L002_R2_001.fastq.gz
+FAIL	Per base sequence content	KO_5_CytokineTreatment_S36_L002_R2_001.fastq.gz
+WARN	Per sequence GC content	KO_5_CytokineTreatment_S36_L002_R2_001.fastq.gz
+PASS	Per base N content	KO_5_CytokineTreatment_S36_L002_R2_001.fastq.gz
+PASS	Sequence Length Distribution	KO_5_CytokineTreatment_S36_L002_R2_001.fastq.gz
+FAIL	Sequence Duplication Levels	KO_5_CytokineTreatment_S36_L002_R2_001.fastq.gz
+WARN	Overrepresented sequences	KO_5_CytokineTreatment_S36_L002_R2_001.fastq.gz
+FAIL	Adapter Content	KO_5_CytokineTreatment_S36_L002_R2_001.fastq.gz
+PASS	Basic Statistics	KO_6_CytokineTreatment_S37_L002_R1_001.fastq.gz
+PASS	Per base sequence quality	KO_6_CytokineTreatment_S37_L002_R1_001.fastq.gz
+WARN	Per tile sequence quality	KO_6_CytokineTreatment_S37_L002_R1_001.fastq.gz
+PASS	Per sequence quality scores	KO_6_CytokineTreatment_S37_L002_R1_001.fastq.gz
+WARN	Per base sequence content	KO_6_CytokineTreatment_S37_L002_R1_001.fastq.gz
+WARN	Per sequence GC content	KO_6_CytokineTreatment_S37_L002_R1_001.fastq.gz
+PASS	Per base N content	KO_6_CytokineTreatment_S37_L002_R1_001.fastq.gz
+PASS	Sequence Length Distribution	KO_6_CytokineTreatment_S37_L002_R1_001.fastq.gz
+FAIL	Sequence Duplication Levels	KO_6_CytokineTreatment_S37_L002_R1_001.fastq.gz
+WARN	Overrepresented sequences	KO_6_CytokineTreatment_S37_L002_R1_001.fastq.gz
+FAIL	Adapter Content	KO_6_CytokineTreatment_S37_L002_R1_001.fastq.gz
+PASS	Basic Statistics	KO_6_CytokineTreatment_S37_L002_R2_001.fastq.gz
+PASS	Per base sequence quality	KO_6_CytokineTreatment_S37_L002_R2_001.fastq.gz
+PASS	Per tile sequence quality	KO_6_CytokineTreatment_S37_L002_R2_001.fastq.gz
+PASS	Per sequence quality scores	KO_6_CytokineTreatment_S37_L002_R2_001.fastq.gz
+FAIL	Per base sequence content	KO_6_CytokineTreatment_S37_L002_R2_001.fastq.gz
+FAIL	Per sequence GC content	KO_6_CytokineTreatment_S37_L002_R2_001.fastq.gz
+PASS	Per base N content	KO_6_CytokineTreatment_S37_L002_R2_001.fastq.gz
+PASS	Sequence Length Distribution	KO_6_CytokineTreatment_S37_L002_R2_001.fastq.gz
+FAIL	Sequence Duplication Levels	KO_6_CytokineTreatment_S37_L002_R2_001.fastq.gz
+WARN	Overrepresented sequences	KO_6_CytokineTreatment_S37_L002_R2_001.fastq.gz
+FAIL	Adapter Content	KO_6_CytokineTreatment_S37_L002_R2_001.fastq.gz
+PASS	Basic Statistics	WT_1_NonTreatment_S26_L002_R1_001.fastq.gz
+PASS	Per base sequence quality	WT_1_NonTreatment_S26_L002_R1_001.fastq.gz
+WARN	Per tile sequence quality	WT_1_NonTreatment_S26_L002_R1_001.fastq.gz
+PASS	Per sequence quality scores	WT_1_NonTreatment_S26_L002_R1_001.fastq.gz
+WARN	Per base sequence content	WT_1_NonTreatment_S26_L002_R1_001.fastq.gz
+WARN	Per sequence GC content	WT_1_NonTreatment_S26_L002_R1_001.fastq.gz
+PASS	Per base N content	WT_1_NonTreatment_S26_L002_R1_001.fastq.gz
+PASS	Sequence Length Distribution	WT_1_NonTreatment_S26_L002_R1_001.fastq.gz
+FAIL	Sequence Duplication Levels	WT_1_NonTreatment_S26_L002_R1_001.fastq.gz
+WARN	Overrepresented sequences	WT_1_NonTreatment_S26_L002_R1_001.fastq.gz
+FAIL	Adapter Content	WT_1_NonTreatment_S26_L002_R1_001.fastq.gz
+PASS	Basic Statistics	WT_1_NonTreatment_S26_L002_R2_001.fastq.gz
+PASS	Per base sequence quality	WT_1_NonTreatment_S26_L002_R2_001.fastq.gz
+PASS	Per tile sequence quality	WT_1_NonTreatment_S26_L002_R2_001.fastq.gz
+PASS	Per sequence quality scores	WT_1_NonTreatment_S26_L002_R2_001.fastq.gz
+FAIL	Per base sequence content	WT_1_NonTreatment_S26_L002_R2_001.fastq.gz
+FAIL	Per sequence GC content	WT_1_NonTreatment_S26_L002_R2_001.fastq.gz
+PASS	Per base N content	WT_1_NonTreatment_S26_L002_R2_001.fastq.gz
+PASS	Sequence Length Distribution	WT_1_NonTreatment_S26_L002_R2_001.fastq.gz
+FAIL	Sequence Duplication Levels	WT_1_NonTreatment_S26_L002_R2_001.fastq.gz
+WARN	Overrepresented sequences	WT_1_NonTreatment_S26_L002_R2_001.fastq.gz
+FAIL	Adapter Content	WT_1_NonTreatment_S26_L002_R2_001.fastq.gz
+PASS	Basic Statistics	WT_2_NonTreatment_S27_L002_R1_001.fastq.gz
+PASS	Per base sequence quality	WT_2_NonTreatment_S27_L002_R1_001.fastq.gz
+WARN	Per tile sequence quality	WT_2_NonTreatment_S27_L002_R1_001.fastq.gz
+PASS	Per sequence quality scores	WT_2_NonTreatment_S27_L002_R1_001.fastq.gz
+WARN	Per base sequence content	WT_2_NonTreatment_S27_L002_R1_001.fastq.gz
+WARN	Per sequence GC content	WT_2_NonTreatment_S27_L002_R1_001.fastq.gz
+PASS	Per base N content	WT_2_NonTreatment_S27_L002_R1_001.fastq.gz
+PASS	Sequence Length Distribution	WT_2_NonTreatment_S27_L002_R1_001.fastq.gz
+FAIL	Sequence Duplication Levels	WT_2_NonTreatment_S27_L002_R1_001.fastq.gz
+WARN	Overrepresented sequences	WT_2_NonTreatment_S27_L002_R1_001.fastq.gz
+FAIL	Adapter Content	WT_2_NonTreatment_S27_L002_R1_001.fastq.gz
+PASS	Basic Statistics	WT_2_NonTreatment_S27_L002_R2_001.fastq.gz
+PASS	Per base sequence quality	WT_2_NonTreatment_S27_L002_R2_001.fastq.gz
+PASS	Per tile sequence quality	WT_2_NonTreatment_S27_L002_R2_001.fastq.gz
+PASS	Per sequence quality scores	WT_2_NonTreatment_S27_L002_R2_001.fastq.gz
+FAIL	Per base sequence content	WT_2_NonTreatment_S27_L002_R2_001.fastq.gz
+FAIL	Per sequence GC content	WT_2_NonTreatment_S27_L002_R2_001.fastq.gz
+PASS	Per base N content	WT_2_NonTreatment_S27_L002_R2_001.fastq.gz
+PASS	Sequence Length Distribution	WT_2_NonTreatment_S27_L002_R2_001.fastq.gz
+FAIL	Sequence Duplication Levels	WT_2_NonTreatment_S27_L002_R2_001.fastq.gz
+WARN	Overrepresented sequences	WT_2_NonTreatment_S27_L002_R2_001.fastq.gz
+FAIL	Adapter Content	WT_2_NonTreatment_S27_L002_R2_001.fastq.gz
+PASS	Basic Statistics	WT_3_NonTreatment_S28_L002_R1_001.fastq.gz
+PASS	Per base sequence quality	WT_3_NonTreatment_S28_L002_R1_001.fastq.gz
+WARN	Per tile sequence quality	WT_3_NonTreatment_S28_L002_R1_001.fastq.gz
+PASS	Per sequence quality scores	WT_3_NonTreatment_S28_L002_R1_001.fastq.gz
+WARN	Per base sequence content	WT_3_NonTreatment_S28_L002_R1_001.fastq.gz
+WARN	Per sequence GC content	WT_3_NonTreatment_S28_L002_R1_001.fastq.gz
+PASS	Per base N content	WT_3_NonTreatment_S28_L002_R1_001.fastq.gz
+PASS	Sequence Length Distribution	WT_3_NonTreatment_S28_L002_R1_001.fastq.gz
+FAIL	Sequence Duplication Levels	WT_3_NonTreatment_S28_L002_R1_001.fastq.gz
+WARN	Overrepresented sequences	WT_3_NonTreatment_S28_L002_R1_001.fastq.gz
+FAIL	Adapter Content	WT_3_NonTreatment_S28_L002_R1_001.fastq.gz
+PASS	Basic Statistics	WT_3_NonTreatment_S28_L002_R2_001.fastq.gz
+PASS	Per base sequence quality	WT_3_NonTreatment_S28_L002_R2_001.fastq.gz
+PASS	Per tile sequence quality	WT_3_NonTreatment_S28_L002_R2_001.fastq.gz
+PASS	Per sequence quality scores	WT_3_NonTreatment_S28_L002_R2_001.fastq.gz
+FAIL	Per base sequence content	WT_3_NonTreatment_S28_L002_R2_001.fastq.gz
+FAIL	Per sequence GC content	WT_3_NonTreatment_S28_L002_R2_001.fastq.gz
+PASS	Per base N content	WT_3_NonTreatment_S28_L002_R2_001.fastq.gz
+PASS	Sequence Length Distribution	WT_3_NonTreatment_S28_L002_R2_001.fastq.gz
+FAIL	Sequence Duplication Levels	WT_3_NonTreatment_S28_L002_R2_001.fastq.gz
+WARN	Overrepresented sequences	WT_3_NonTreatment_S28_L002_R2_001.fastq.gz
+FAIL	Adapter Content	WT_3_NonTreatment_S28_L002_R2_001.fastq.gz
+PASS	Basic Statistics	WT_4_CytokineTreatment_S32_L002_R1_001.fastq.gz
+PASS	Per base sequence quality	WT_4_CytokineTreatment_S32_L002_R1_001.fastq.gz
+WARN	Per tile sequence quality	WT_4_CytokineTreatment_S32_L002_R1_001.fastq.gz
+PASS	Per sequence quality scores	WT_4_CytokineTreatment_S32_L002_R1_001.fastq.gz
+WARN	Per base sequence content	WT_4_CytokineTreatment_S32_L002_R1_001.fastq.gz
+WARN	Per sequence GC content	WT_4_CytokineTreatment_S32_L002_R1_001.fastq.gz
+PASS	Per base N content	WT_4_CytokineTreatment_S32_L002_R1_001.fastq.gz
+PASS	Sequence Length Distribution	WT_4_CytokineTreatment_S32_L002_R1_001.fastq.gz
+FAIL	Sequence Duplication Levels	WT_4_CytokineTreatment_S32_L002_R1_001.fastq.gz
+FAIL	Overrepresented sequences	WT_4_CytokineTreatment_S32_L002_R1_001.fastq.gz
+FAIL	Adapter Content	WT_4_CytokineTreatment_S32_L002_R1_001.fastq.gz
+PASS	Basic Statistics	WT_4_CytokineTreatment_S32_L002_R2_001.fastq.gz
+PASS	Per base sequence quality	WT_4_CytokineTreatment_S32_L002_R2_001.fastq.gz
+PASS	Per tile sequence quality	WT_4_CytokineTreatment_S32_L002_R2_001.fastq.gz
+PASS	Per sequence quality scores	WT_4_CytokineTreatment_S32_L002_R2_001.fastq.gz
+FAIL	Per base sequence content	WT_4_CytokineTreatment_S32_L002_R2_001.fastq.gz
+FAIL	Per sequence GC content	WT_4_CytokineTreatment_S32_L002_R2_001.fastq.gz
+PASS	Per base N content	WT_4_CytokineTreatment_S32_L002_R2_001.fastq.gz
+PASS	Sequence Length Distribution	WT_4_CytokineTreatment_S32_L002_R2_001.fastq.gz
+FAIL	Sequence Duplication Levels	WT_4_CytokineTreatment_S32_L002_R2_001.fastq.gz
+WARN	Overrepresented sequences	WT_4_CytokineTreatment_S32_L002_R2_001.fastq.gz
+FAIL	Adapter Content	WT_4_CytokineTreatment_S32_L002_R2_001.fastq.gz
+PASS	Basic Statistics	WT_5_CytokineTreatment_S33_L002_R1_001.fastq.gz
+PASS	Per base sequence quality	WT_5_CytokineTreatment_S33_L002_R1_001.fastq.gz
+WARN	Per tile sequence quality	WT_5_CytokineTreatment_S33_L002_R1_001.fastq.gz
+PASS	Per sequence quality scores	WT_5_CytokineTreatment_S33_L002_R1_001.fastq.gz
+WARN	Per base sequence content	WT_5_CytokineTreatment_S33_L002_R1_001.fastq.gz
+WARN	Per sequence GC content	WT_5_CytokineTreatment_S33_L002_R1_001.fastq.gz
+PASS	Per base N content	WT_5_CytokineTreatment_S33_L002_R1_001.fastq.gz
+PASS	Sequence Length Distribution	WT_5_CytokineTreatment_S33_L002_R1_001.fastq.gz
+FAIL	Sequence Duplication Levels	WT_5_CytokineTreatment_S33_L002_R1_001.fastq.gz
+FAIL	Overrepresented sequences	WT_5_CytokineTreatment_S33_L002_R1_001.fastq.gz
+FAIL	Adapter Content	WT_5_CytokineTreatment_S33_L002_R1_001.fastq.gz
+PASS	Basic Statistics	WT_5_CytokineTreatment_S33_L002_R2_001.fastq.gz
+PASS	Per base sequence quality	WT_5_CytokineTreatment_S33_L002_R2_001.fastq.gz
+PASS	Per tile sequence quality	WT_5_CytokineTreatment_S33_L002_R2_001.fastq.gz
+PASS	Per sequence quality scores	WT_5_CytokineTreatment_S33_L002_R2_001.fastq.gz
+FAIL	Per base sequence content	WT_5_CytokineTreatment_S33_L002_R2_001.fastq.gz
+FAIL	Per sequence GC content	WT_5_CytokineTreatment_S33_L002_R2_001.fastq.gz
+PASS	Per base N content	WT_5_CytokineTreatment_S33_L002_R2_001.fastq.gz
+PASS	Sequence Length Distribution	WT_5_CytokineTreatment_S33_L002_R2_001.fastq.gz
+FAIL	Sequence Duplication Levels	WT_5_CytokineTreatment_S33_L002_R2_001.fastq.gz
+WARN	Overrepresented sequences	WT_5_CytokineTreatment_S33_L002_R2_001.fastq.gz
+FAIL	Adapter Content	WT_5_CytokineTreatment_S33_L002_R2_001.fastq.gz
+PASS	Basic Statistics	WT_6_CytokineTreatment_S34_L002_R1_001.fastq.gz
+PASS	Per base sequence quality	WT_6_CytokineTreatment_S34_L002_R1_001.fastq.gz
+WARN	Per tile sequence quality	WT_6_CytokineTreatment_S34_L002_R1_001.fastq.gz
+PASS	Per sequence quality scores	WT_6_CytokineTreatment_S34_L002_R1_001.fastq.gz
+WARN	Per base sequence content	WT_6_CytokineTreatment_S34_L002_R1_001.fastq.gz
+WARN	Per sequence GC content	WT_6_CytokineTreatment_S34_L002_R1_001.fastq.gz
+PASS	Per base N content	WT_6_CytokineTreatment_S34_L002_R1_001.fastq.gz
+PASS	Sequence Length Distribution	WT_6_CytokineTreatment_S34_L002_R1_001.fastq.gz
+FAIL	Sequence Duplication Levels	WT_6_CytokineTreatment_S34_L002_R1_001.fastq.gz
+WARN	Overrepresented sequences	WT_6_CytokineTreatment_S34_L002_R1_001.fastq.gz
+FAIL	Adapter Content	WT_6_CytokineTreatment_S34_L002_R1_001.fastq.gz
+PASS	Basic Statistics	WT_6_CytokineTreatment_S34_L002_R2_001.fastq.gz
+PASS	Per base sequence quality	WT_6_CytokineTreatment_S34_L002_R2_001.fastq.gz
+PASS	Per tile sequence quality	WT_6_CytokineTreatment_S34_L002_R2_001.fastq.gz
+PASS	Per sequence quality scores	WT_6_CytokineTreatment_S34_L002_R2_001.fastq.gz
+FAIL	Per base sequence content	WT_6_CytokineTreatment_S34_L002_R2_001.fastq.gz
+FAIL	Per sequence GC content	WT_6_CytokineTreatment_S34_L002_R2_001.fastq.gz
+PASS	Per base N content	WT_6_CytokineTreatment_S34_L002_R2_001.fastq.gz
+PASS	Sequence Length Distribution	WT_6_CytokineTreatment_S34_L002_R2_001.fastq.gz
+FAIL	Sequence Duplication Levels	WT_6_CytokineTreatment_S34_L002_R2_001.fastq.gz
+WARN	Overrepresented sequences	WT_6_CytokineTreatment_S34_L002_R2_001.fastq.gz
+FAIL	Adapter Content	WT_6_CytokineTreatment_S34_L002_R2_001.fastq.gz

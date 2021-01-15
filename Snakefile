@@ -66,8 +66,13 @@ rule all:
     input:
     	# QC output
     	expand(
-    		"{results}/fastqc/fastqc_{sample}.txt",
+    		"{results}/fastqc/fastqc_{sample}_summary.txt",
     		results = RESULTS, sample = SAMPLES),
+        # Fastqc summary
+        expand(
+            "{results}/fastqc_summary.tsv",
+            results = RESULTS
+            ),
         # Output of adaptor trimming
         expand(
             "{results}/logs/{trim_method}_trim_{sample}.txt",
@@ -75,9 +80,8 @@ rule all:
             trim_method = TRIM_METHOD),
         # STAR output
         expand(
-            "{results}/star_{trim_method}_trim/{sample}_Aligned.sortedByCoord.out.bam",
-            results = RESULTS, sample = SAMPLES,
-            trim_method = TRIM_METHOD
+            "{results}/star_summary_{trim_method}_trim.tsv",
+            results = RESULTS, trim_method = TRIM_METHOD
             ),
         # featureCounts output
         expand(

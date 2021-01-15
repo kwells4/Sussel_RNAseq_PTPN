@@ -26,7 +26,7 @@ def _get_input(wildcards):
 rule bbduk:
     input:
         input_list   = _get_input,
-        fastqc_output = "{results}/fastqc/fastqc_{sample}.txt"
+        fastqc_output = "{results}/fastqc/fastqc_{sample}_summary.txt"
     output:
         "{results}/logs/bbduk_trim_{sample}.txt"
     params:

@@ -1,152 +1,61 @@
 ---
 title: "PTPN Knockout"
 author: "Kristen Wells"
-date: "`r format(Sys.Date(), '%B %d, %Y')`"
-output:
-  html_document:
-    toc: true
-    toc_depth: 2
-    toc_float: true
-    highlight: "tango"
-    df_print: "paged"
-    code_folding: "hide"
-    self_contained: true
-params:
-  counts: "results/PTPN_KO_countTable_no_trim.txt"
-  fastqc: "results/fastqc_summary.tsv"
-  star_stats: "results/star_summary_no_trim.tsv"
-  output_dir: "results/R_analysis"
-  sample_info: "files/sample_info.csv"
+date: "1/13/2021"
+date_updated: "1/13/2021"
+output: html_document
 ---
-```{r "Load packages and set options", include = F}
-install_packages <- function(install_list, name_list = NULL, 
-                             install_cmd = "utils::install.packages", ...) {
-  
-  # If using devtools::install_github(), the package name will be different 
-  # from the repository name in install_list
-  if (is.null(name_list)) {
-    name_list <- install_list
-  }
-  
-  # Install packages
-  for (i in 1:length(install_list)) {
-    # require() returns TRUE invisibly if it was able to load package
-    if (!require(name_list[i], character.only = T)) {
-      
-      install_pkg <- strsplit(install_cmd, "::")[[1]][1]
-      
-      if (!require(install_pkg, character.only = T)) {
-        install.packages(install_pkg, dependencies = T, ...)
-        require(install_pkg)
-      }
-      
-      install_cmd <- paste0(install_cmd, "(install_list[i], ...)")
-      eval(parse(text = install_cmd))
-      
-      require(name_list[i], character.only = T)
-    }
-  }
-}
 
-# Install CRAN packages
-install_packages(c(
-  "knitr",    "BiocManager",
-  "cowplot",  "tidyverse", 
-  "Matrix",   "pheatmap",
-  "ggrepel",  "devtools", 
-  "gprofiler2", "viridis",
-  "RColorBrewer", "ashr",
-  "apeglm"
-))
-
-# Install Bioconductor packages
-install_packages(c(
-  "DESeq2", "pathview",
-  "KEGGREST"
-), install_cmd = "BiocManager::install")
-
-# Set default chunk options
-opts_chunk$set(
-  message = F, 
-  warning = F,
-  comment = ""
-)
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
 ```
-
-```{r "Load Functions and Theme"}
-#############
-# Functions # 
-#############
-
-# Create a PCA Plot
-# Make a PCA plot
-pcaData <- plotPCA(vsd, intgroup = "Genotype_R", returnData = T)
-percentVar <- round(100 * attr(pcaData, "percentVar"))
-ggplot2::ggplot(pcaData, ggplot2::aes(PC1, PC2, color = Genotype_R)) +
-  ggplot2::geom_point(size = 3) +
-  ggplot2::xlab(paste0("PC1: ", percentVar[1], "% variance")) +
-  ggplot2::ylab(paste0("PC2: ", percentVar[2], "% variance")) +
-  ggplot2::coord_fixed() +
-  ggplot2::scale_color_brewer(palette = "Set1")
-
-# Function to return sig genes for a comparison
-get_de <- function(object, column, var1, var2, write_csv = F,
-                   p_value = 0.05, lfc = 0.5,
-                   maplot = TRUE){
-  res <- DESeq2::results(object, contrast = c(column, var1, var2))
-  res <- DESeq2::lfcShrink(object, contrast = c(column, var1, var2),
-                           res = res, type = "ashr")
-  if(maplot){
-    plotMA(res, main = paste0(var1, " vs ", var2))
-  }
-  resOrdered <- res[order(res$pvalue), ]
-  sigGenes <- resOrdered[!is.na(resOrdered$padj), ]
-  sigGenes <- sigGenes[sigGenes$padj < p_value, ]
-  sigGenes <- sigGenes[abs(sigGenes$log2FoldChange) > lfc, ]
-  # Add columns for gene id and ens id
-  sigGenes_colnames <- colnames(sigGenes)
-  sigGenes$gene_name <- sub("_ENSMUSG.*", "", rownames(sigGenes))
-  sigGenes$ens_id <- sub(".*_ENSMUSG", "ENSMUSG", rownames(sigGenes))
-  # Place the new columns at the front
-  sigGenes <- sigGenes[ , c("gene_name", "ens_id", sigGenes_colnames)]
-  if(write_csv){
-    file_name <- paste0(var1, "_vs_", var2, ".csv")
-    write.csv(sigGenes, file = file.path(base_path, "DE_files", file_name),
-              row.names = FALSE)
-  }
-  return(sigGenes)
-}
-
-# Make a heatmap
-# Run gprofiler
-```
-
-
-
-
-
 
 ## Background
 This documents the analysis of the effect of cytokine treatment on PTPN2 KO mice.
 This document aims to analyze differences between PTPN2 KO and WT mice in their
 response to cytokine treatment.
 
-```{r}
-
-# Load in the files
-  counts: "results/PTPN_KO_countTable_no_trim.txt"
-  fastqc: "results/fastqc_summary.tsv"
-  star_stats: "star_summary_no_trim.tsv"
-  output_dir: "results/R_analysis"
-  sample_info: "files/sample_info.csv"
-# First change the working directory to be the main directory of the snakefile
-setwd("../../../")
-count_table <- read.table(params$counts, sep = "\t", row.names = 1, header = T)
-sample_table <- read.table(params$sample_info, sep = ",", header = T,
-                           row.names = 1)
-star_stats <- read.table(params$star_stats, sep = "\t", row.names = 1,
-                         header = T)
+```{r, echo = TRUE, results = 'hide', message = FALSE}
+library(corrplot)
+library(DESeq2)
+library(RColorBrewer)
+library(pheatmap)
+library(apeglm)
+library(ashr)
+library(gprofiler2)
+library(viridis)
 ```
+
+We start by providing a path to the location of the count table. This count table was created using a combination of STAR for aligning and feature counts for gene counting. I like to provide a "base path" that is where all documents associated with this analysis are located. That way, I make sure that I always am saving to the correct place even if I move the analysis (I only have to change the base path and not every line of code).
+
+```{r}
+base_path <- "/Users/wellskr/Documents/Analysis/Lori_sussel/Young_Kim/Sussel_RNASeq_PTPN"
+# Path to the count file
+count_file <- file.path(base_path,
+                     "results/PTPN_KO_countTable_no.txt")
+# Path to the sample info
+sample_file <- file.path(base_path, "files/sample_info.csv")
+
+# this is the list of genes that interest you. This list I took from 
+gene_list <- c("Slc2a3", "Ins1", "Ins2", "Pcsk1", "Abcc8", "Cacna1c",
+               "Pdx1", "Mafa", "Nkx6-1", "Gata6", "Gcg", "Sst", "Ghrl",
+               "Ppy", "Nkx2-2", "Gata4")
+# Load in the files
+count_table <- read.table(count_file, sep = "\t", row.names = 1, header = T)
+sample_table <- read.table(sample_file, sep = ",", header = T, row.names = 1)
+```
+
+## Correlation between samples
+
+First, I look at correlation between samples to determine if there is any structure to the data. Note this correlation is raw reads, so it is just an overview of the data.
+
+```{r corrplot1}
+correlation_matrix <- cor(count_table)
+corrplot(as.matrix(correlation_matrix), method = "circle", order = "hclust")
+```
+
+
+Everything seems well correlated.
 
 # Make a DESeq2 object
 

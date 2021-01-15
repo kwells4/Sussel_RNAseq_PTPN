@@ -20,7 +20,7 @@ for i in file_list:
 		for line in countFile:
 			print(line)
 			if "READS" not in line:
-				line = line.strip().split("|")
+				line = line.strip().split(" |\t")
 				if len(line) == 2:
 					stat_type, value = line
 					stat_dict[stat_type].append(value)

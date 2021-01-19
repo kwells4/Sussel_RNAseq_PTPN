@@ -28,17 +28,18 @@ rule bbduk:
         input_list   = _get_input,
         fastqc_output = "{results}/fastqc/fastqc_{sample}_summary.txt"
     output:
-        "{results}/logs/bbduk_trim_{sample}.txt"
+        "{results}/bbduk_trim/{sample}.txt"
     params:
-        ref      = ADAPTORS,
-        opts     = CMD_PARAMS["bbduk"],
-        fastq1   = "{results}/bbduk/{sample}_R1_bbduk_trimmed.fastq",
-        fastq2   = "{results}/bbduk/{sample}_R2_bbduk_trimmed.fastq",
-        job_name = "{sample}_bbduk",
-        memory   = "select[mem>4] rusage[mem=4]"
+        ref       = ADAPTORS,
+        opts      = CMD_PARAMS["bbduk"],
+        fastq1    = "{results}/bbduk_trim/{sample}_R1_trimmed.fastq.gz",
+        fastq2    = "{results}/bbduk_trim/{sample}_R2_trimmed.fastq.gz",
+        job_name  = "{sample}_bbduk",
+        memory    = "select[mem>4] rusage[mem=4]"
     log:
         "{results}/logs/bbduk_{sample}"
     run:
+
         if IS_PAIRED:
             shell(
                 '''
@@ -61,24 +62,25 @@ rule bbduk:
                 {params.opts}
                 '''
             )
-        with open(output[0]) as out:
+        with open(output[0], "w") as out:
             out.write("done with bbduk trimming/n")
 
 """ Rules for trimming reads with cutadapt """
 # Run cutadapt for single-end reads
 rule cutadapt:
     input:
-        _get_fqs
+        input_list   = _get_input,
+        fastqc_output = "{results}/fastqc/fastqc_{sample}_summary.txt"
     output:
-        "{results}/logs/cutadapt_trim_{sample}.txt"
+        "{results}/cutadapt_trim/{sample}.txt"
     params:
-        job_name = "{sample}_cutadapt",
-        memory   = "select[mem>4] rusage[mem=4]",
-        settings = CMD_PARAMS["cutadapt"],
-        fastq1   = "{results}/bbduk/{sample}_R1_bbduk_trimmed.fastq",
-        fastq2   = "{results}/bbduk/{sample}_R2_bbduk_trimmed.fastq"
+        job_name  = "{sample}_cutadapt",
+        memory    = "select[mem>4] rusage[mem=4]",
+        settings  = CMD_PARAMS["cutadapt"],
+        fastq1    = "{results}/cutadapt_trim/{sample}_R1_trimmed.fastq.gz",
+        fastq2    = "{results}/cutadapt_trim/{sample}_R2_trimmed.fastq.gz"
     log:
-        "{reults}/logs/cutadapt_{sample}"
+        "{results}/logs/cutadapt_{sample}"
     message:
         "Trimming illumina adapters for {wildcards.sample}" 
     threads:
@@ -91,8 +93,8 @@ rule cutadapt:
                     {params.settings} \
                     -o {params.fastq1} \
                     -p {params.fastq2} \
-                    {input[0]}  \
-                    {input[1]}
+                    {input.input_list[0]}  \
+                    {input.input_list[1]}
                 """
             )
         else:
@@ -101,16 +103,18 @@ rule cutadapt:
                 cutadapt \
                     {params.settings} \
                     -o {output} \
-                    {input[0]} 
+                    {input.input_list[0]} 
                 """
             )
+        with open(output[0], "w") as out:
+            out.write("done with cutadapt trimming/n")
 
 rule no_trim:
     input:
         input_list = _get_input,
         fastqc_output = "{results}/fastqc/fastqc_{sample}.txt"
     output:
-        "{results}/logs/no_trim_{sample}.txt"
+        "{results}/no_trim/{sample}.txt"
     params:
         job_name = "{sample}_noTrim",
         memory = "select[mem>1] rusage[mem=1]"

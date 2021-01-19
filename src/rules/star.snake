@@ -22,25 +22,20 @@ def _get_input_star(wildcards):
     # Grab path of the fastq file
     fastq1 = (wildcards.results + "/" + wildcards.trim_method + "/" + wildcards.sample +
         "_R1_trimmed.fastq.gz")
-    # Make sure file exists
-    if wildcards.trim_method != "no":
-        fastq1  = _check_path(fastq1)
     if IS_PAIRED:
         # Grab path of second read
         fastq2 = (wildcards.results + "/" + wildcards.trim_method + "/" + wildcards.sample +
             "_R2_trimmed.fastq.gz")
-        # Make sure file exists
-        if wildcards.trim_method != "no":
-            fastq2 = _check_path(fastq2)
         return(fastq1, fastq2)
     else:
         return(fastq1)
 
 rule align:
     input:
-        "{results}/logs/{trim_method}_trim_{sample}.txt"
+        "{results}/{trim_method}_trim/{sample}.txt"
     output:
-        "{results}/star_{trim_method}_trim/{sample}_Aligned.sortedByCoord.out.bam"
+        bam_output = "{results}/star_{trim_method}_trim/{sample}_Aligned.sortedByCoord.out.bam",
+        log_output = "{results}/star_{trim_method}_trim/{sample}_Log.final.out"
     params:
         job_name      = "{sample}_star",
         memory        = "select[mem>60] rusage[mem=60]",

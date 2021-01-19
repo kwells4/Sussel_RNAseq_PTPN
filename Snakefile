@@ -75,7 +75,7 @@ rule all:
             ),
         # Output of adaptor trimming
         expand(
-            "{results}/logs/{trim_method}_trim_{sample}.txt",
+            "{results}/{trim_method}_trim/{sample}.txt",
             results = RESULTS, sample = SAMPLES,
             trim_method = TRIM_METHOD),
         # STAR output

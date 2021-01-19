@@ -12,6 +12,7 @@ output:
     code_folding: "hide"
     self_contained: true
 params:
+  genome: "GRCm38"
   counts: "results/PTPN_KO_countTable_no_trim.txt"
   fastqc: "results/fastqc_summary.tsv"
   star_stats: "results/star_summary_no_trim.tsv"
@@ -62,7 +63,7 @@ install_packages(c(
 # Install Bioconductor packages
 install_packages(c(
   "DESeq2", "pathview",
-  "KEGGREST"
+  "KEGGREST", "org.Hs.eg.db"
 ), install_cmd = "BiocManager::install")
 
 # Set default chunk options
@@ -80,14 +81,36 @@ opts_chunk$set(
 
 # Create a PCA Plot
 # Make a PCA plot
-pcaData <- plotPCA(vsd, intgroup = "Genotype_R", returnData = T)
-percentVar <- round(100 * attr(pcaData, "percentVar"))
-ggplot2::ggplot(pcaData, ggplot2::aes(PC1, PC2, color = Genotype_R)) +
-  ggplot2::geom_point(size = 3) +
-  ggplot2::xlab(paste0("PC1: ", percentVar[1], "% variance")) +
-  ggplot2::ylab(paste0("PC2: ", percentVar[2], "% variance")) +
-  ggplot2::coord_fixed() +
-  ggplot2::scale_color_brewer(palette = "Set1")
+plot_pca <- function(vsd, group_by){
+  pcaData <- plotPCA(vsd, intgroup = group_by, returnData = T)
+    colnames(pcaData)[3] <- "group_by"
+    percentVar <- round(100 * attr(pcaData, "percentVar"))
+    pca_plot <- ggplot(data = pcaData,
+                       mapping = aes(x = PC1,
+                                     y = PC2,
+                                     color = group_by)) +
+    geom_point(size = 3) +
+    xlab(paste0("PC1: ", percentVar[1], "% variance")) +
+    ylab(paste0("PC2: ", percentVar[2], "% variance")) +
+    labs(color = group_by) +
+    coord_fixed() +
+    scale_color_brewer(palette = "Set1")
+return(pca_plot)
+}
+
+
+# Function to determine sample distances
+get_distances <- function(vsd){
+  sampleDists <- dist(t(assay(vsd)))
+  sampleDistMatrix <- as.matrix(sampleDists)
+  colnames(sampleDistMatrix) <- NULL
+  colors <- colorRampPalette( rev(brewer.pal(9, "Blues")) )(255)
+  dist_map <- pheatmap(sampleDistMatrix,
+                       clustering_distance_rows=sampleDists,
+                       clustering_distance_cols=sampleDists,
+                       col=colors)
+  return(dist_map)
+}
 
 # Function to return sig genes for a comparison
 get_de <- function(object, column, var1, var2, write_csv = F,
@@ -132,99 +155,193 @@ This document aims to analyze differences between PTPN2 KO and WT mice in their
 response to cytokine treatment.
 
 ```{r}
-
 # Load in the files
-  counts: "results/PTPN_KO_countTable_no_trim.txt"
-  fastqc: "results/fastqc_summary.tsv"
-  star_stats: "star_summary_no_trim.tsv"
-  output_dir: "results/R_analysis"
-  sample_info: "files/sample_info.csv"
+
 # First change the working directory to be the main directory of the snakefile
 setwd("../../../")
+
+###############
+# Count table #
+###############
+
+# Read in the count table
 count_table <- read.table(params$counts, sep = "\t", row.names = 1, header = T)
+
+################
+# Sample table #
+################
+
+# Read in the sample table
 sample_table <- read.table(params$sample_info, sep = ",", header = T,
                            row.names = 1)
-star_stats <- read.table(params$star_stats, sep = "\t", row.names = 1,
-                         header = T)
-```
 
-# Make a DESeq2 object
-
-```{r}
-# First we need to reorder the counts file so the samples are in the same order as the sample file.
+# Ensure the count table and sample table are in the same order
 count_table <- count_table[ , rownames(sample_table)]
 # A quick check to make sure that worked
 all(rownames(sample_table) == colnames(count_table))
-# Add a new column to the sample table that is friendlier with R
-change_list <- c("Neurog3cre" = "Neurog3cre",
-                 "Gata6 fl/fl" = "Gata6" ,
-                 "Neurog3cre; RarDN fl/+" = "Neurog3cre_RARdn",
-                 "Neurog3cre; Gata6 fl/fl" = "Neurog3cre_Gata6" ,
-                 "Neurog3cre; Gata6 fl/fl; RARdn fl/+" =
-                   "Neurog3cre_RARdn_Gata6",
-                 "Neurog3cre; Gata4 fl/+;  Gata6 fl/fl; RARdn fl/+" =
-                   "Neurog3cre_Gata4_Gata6_RARdn",
-                 "Neurog3cre; Gata4 fl/+; Gata6 fl/fl; RARdn fl/+" =
-                   "Neurog3cre_Gata4_Gata6_RARdn")
-Genotype <- sample_table$Genotype
-Genotype_R <- change_list[Genotype]
-sample_table$Genotype_R <- Genotype_R
-# We want to factor with the compare against as the last variable in the factor
-sample_table$Genotype_R <- factor(sample_table$Genotype_R,
-                                  levels = c("Neurog3cre_RARdn", 
-                                             "Neurog3cre_Gata6",
-                                             "Neurog3cre_RARdn_Gata6",
-                                             "Neurog3cre_Gata4_Gata6_RARdn",
-                                             "Gata6",
-                                             "Neurog3cre"))
+
+########
+# Star #
+########
+
+# Read in star stats
+star_stats <- read.table(params$star_stats, sep = "\t", row.names = 1,
+                         header = T)
+
+# Filter for mapping % and total read counts
+star_stats <- star_stats[grepl(
+  "%|Uniquely mapped reads|mapped to multiple loci",
+  rownames(star_stats)), ]
+
+star_stats <- star_stats[!grepl(
+  "^Mismatch|chimeric", rownames(star_stats)), ]
+
+# Pull out all sample names
+samples <- colnames(star_stats)
+
+# Make a column of metrics
+star_stats$metric <- rownames(star_stats)
+
+# Make into long form for ggplot
+star_stats_long <- gather(star_stats, key = "Sample", value = "value",
+                          all_of(samples))
+
+
+# Add column for value type
+star_stats_long <- star_stats_long %>%
+  mutate(
+    value = as.numeric(str_remove(value, "%")),
+    val_type = ifelse(grepl("%", metric),
+                      "pct", "int")
+  )
+
+# Pull out read counts
+# Calculate median library size
+read_counts <- star_stats_long %>%
+  filter(grepl("mapped reads number", metric)) %>%
+  mutate(value = round(value / 1000000)) %>%
+  mutate(value = str_c(value, " million"))
+
+##########
+# FastQC #
+##########
+
+# Load in fastqc results
+fastqc_summary <- read.table(params$fastqc, sep = "\t")
+
+# Change the colnames
+colnames(fastqc_summary) <- c("Result", "Test", "Sample")
+
+# Update sample names
+fastqc_summary$Sample <- sub("_S[0-9]*_L[0-9]*_", "", fastqc_summary$Sample)
+fastqc_summary$Sample <- sub("_001.fastq.gz", "", fastqc_summary$Sample)
+
+
+
+```
+
+# Quality Control {.tabset}
+
+## FastQC Summary
+`FastQC` was used to assess the quality of each fastq file. A summary of the results is shown below, the overall library quality was **`r params$library_quality`**.
+```{r "Create fastqc summary", fig.width = 8.5, fig.height = 3}
+fastqc_plot <- ggplot(data = fastqc_summary,
+                      mapping = aes(x = Sample,
+                                    y = Test,
+                                    fill = Result)) +
+  geom_tile(color = "white", size = 0.5) +
+  scale_fill_manual(values = c("#e31a1c", "#238443", "#ec7014")) +
+  theme_classic() +
+  theme(
+    legend.title = element_blank(),
+    legend.text  = element_text(size = 8),
+    axis.title   = element_blank(),
+    axis.text    = element_text(size = 8),
+    axis.text.x  = element_text(angle = 90, hjust = 1, vjust = 0.5)
+  )
+
+fastqc_plot
 ```
 
 
+## Alignment Summary
+Reads were aligned to the `r params$genome` genome using the `STAR` RNA-seq aligner. A summary of the results is shown below, the library size is displayed on each bar. The median library size was `r median_size` million reads and the median alignment rate was `r median_rate`. Overall, the alignment rate was **`r alignment_qual`**. 
+```{r "Create alignment summary", fig.width = 8.5, fig.height = 3}
 
-```{r}
-# This makes a DESeq2 object where the count data is our count matrix and the colData is our sample data. I am currently making the design based on "genotype" but we can change this if necessary
+# Plot alignment stats
+star_stats_long_pct <- star_stats_long %>%
+  filter(val_type == "pct") %>%
+  
+  # Add median rates to metric label
+  mutate(
+    metric = str_remove(metric, "% of reads | reads %"),
+    metric = str_to_sentence(metric)
+  ) %>%
+  arrange(value) %>%
+  mutate(metric = fct_inorder(metric))
+  
+# Plot STAR alignment stats
+star_plot <- ggplot(data = star_stats_long_pct,
+                    mapping = aes(x = Sample,
+                                  y = value,
+                                  fill = metric)) +
+  geom_bar(stat = "identity", color = "white", size = 0.5) +
+  
+  # Label bars with library size
+  geom_text(
+    data = read_counts, 
+    aes(Sample, 50, label = value),
+    show.legend = F,
+    inherit.aes = F,
+    color = "white", 
+    angle = 90
+  ) +
+  
+  scale_fill_manual(
+    values = c("#737373", "#8c6bb1", "#ec7014",
+                            "#e31a1c", "#238443", "#225ea8"),
+    guide  = guide_legend(reverse = T)
+  ) +
+  scale_y_continuous(labels = function(x) {str_c(x, "%")}) +
+  theme_classic() +
+  theme(
+    legend.title = element_blank(),
+    legend.text  = element_text(size = 8),
+    axis.title   = element_blank(),
+    axis.text    = element_text(size = 8),
+    axis.text.x  = element_text(angle = 90, hjust = 1, vjust = 0.5)
+  )
+
+star_plot
+
+```
+
+
+## PCA
+
+```{r "Run DESeq2 and create PCA plot", fig.width = 6, fig.height = 4}
+# This makes a DESeq2 object where the count data is our count matrix and the colData is our sample data. I am currently making the design based on "group" but we can change this if necessary
 dds <- DESeqDataSetFromMatrix(countData = count_table,
                               colData = sample_table,
-                              design = ~Genotype_R)
+                              design = ~group)
 # Here we get rid of all the genes that are not expressed
 keep <- rowSums(counts(dds)) >= 10
 dds <- dds[keep,]
 dds <- DESeq(dds)
 # This transforms the counts to have constant variance. This helps ensue that highly or lowly expressed genes will not contribute too much for the PCA or clustering analysis
 vsd <- vst(dds, blind = F)
+
+plot_pca(vsd, group_by = "group")
 ```
 
 
-## Check data quality
+## Sample Distances
+Correlations between samples was determined to further assess similarities between samples. Biological replicates should cluster together. Samples that are more similar to each other have values closer to 0. 
 
-```{r sampledist1}
-# This determines distance between samples. It is very simlar to the # correlation done above.
-sampleDists <- dist(t(assay(vsd)))
-sampleDistMatrix <- as.matrix(sampleDists)
-colnames(sampleDistMatrix) <- NULL
-colors <- colorRampPalette( rev(brewer.pal(9, "Blues")) )(255)
-pheatmap(sampleDistMatrix,
-         clustering_distance_rows=sampleDists,
-         clustering_distance_cols=sampleDists, col=colors)
+```{r "Determine distance between samples", fig.width= 6, fig.height = 4}
+# This determines distance between samples.
+get_distances(vsd)
 ```
-
-
-Initially this looks pretty promising. For the most part, we see samples clustering by their genotype (although this is not true across the board)
-
-Next we will make a PCA plot to look at distances between samples
-```{r pca1}
-# Make a PCA plot
-pcaData <- plotPCA(vsd, intgroup = "Genotype_R", returnData = T)
-percentVar <- round(100 * attr(pcaData, "percentVar"))
-ggplot2::ggplot(pcaData, ggplot2::aes(PC1, PC2, color = Genotype_R)) +
-  ggplot2::geom_point(size = 3) +
-  ggplot2::xlab(paste0("PC1: ", percentVar[1], "% variance")) +
-  ggplot2::ylab(paste0("PC2: ", percentVar[2], "% variance")) +
-  ggplot2::coord_fixed() +
-  ggplot2::scale_color_brewer(palette = "Set1")
-```
-
-It looks like the WT stands out here. This is consistent with what I saw in the fastqc, in general the data quality for the WT samples was lower. Another note is that the variance across PC1 is on the lower side.
 
 ## Differential gene expression
 

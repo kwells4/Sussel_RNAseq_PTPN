@@ -1,0 +1,99 @@
+```{r echo = F}
+
+# Strings to match samples and create labels
+comparison <- c("{{.x[1]}}", "{{.x[2]}}")
+
+control <- comparison[1]
+treatment <- comparison[2]
+
+# Create section title
+sect_title <- paste0(control, "_vs_", treatment)
+
+
+```
+
+## **`r sect_title`**
+
+```{r}
+# Extract DE genes
+sig_genes <- get_de(dds, params$sample_column, control, treatment,
+                    write_csv = T, p_value = params$DE_alpha,
+                    lfc = 0, output_dir = params$output_dir,
+                    lfc_shrink = T)
+
+sig_genes_high_lfc <- get_de(dds, params$sample_column, control, treatment,
+                             write_csv = F, p_value = params$DE_alpha,
+                             lfc = params$DE_lfc,
+                             lfc_shrink = T)
+
+DE_genes_n <- nrow(sig_genes$DE_genes)
+```
+
+### DEseq2 analysis
+**`r format(DE_genes_n, big.mark = ",")`** differentially expressed genes were identified using the `DESeq2` package.
+
+Differentially expressed genes are labeled on the MA plot in blue.
+```{r, fig.width = 6, fig.height = 4}
+plotMA(sig_genes$DE_df, main = paste0(control, " vs ", treatment))
+```
+
+### Heatmaps
+Heatmap of DE genes across all samples
+```{r, fig.width = 6, fig.height = 4}
+heatmap_dir <- file.path(params$output_dir, "images", "heatmaps")
+heatmap <- make_heatmap(dds = dds,
+                        de_genes = sig_genes$DE_genes,
+                        treatment = treatment,
+                        control = control,
+                        group = params$sample_column,
+                        print_genenames = FALSE,
+                        cluster_cols = FALSE,
+                        save_heatmap = TRUE,
+                        output_dir = heatmap_dir,
+                        color_test = sample_colors)
+print(heatmap)
+
+```
+
+Heatmap of DE genes across only the samples used in the comparision
+
+```{r, fig.width = 6, fig.height = 4}
+heatmap_dir <- file.path(params$output_dir, "images", "heatmaps")
+heatmap <- make_heatmap(dds = dds,
+                        de_genes = sig_genes$DE_genes,
+                        treatment = treatment,
+                        control = control,
+                        group = params$sample_column,
+                        print_genenames = FALSE,
+                        cluster_cols = FALSE,
+                        save_heatmap = FALSE,
+                        plot_groups = c(treatment, control),
+                        color_test = sample_colors)
+print(heatmap)
+
+```
+
+### Gene Set Enrichment
+
+For Gene Set Enrichment, I used `gprofiler2` It uses a hypergeometric test to determine overrepresentation of genes from different categories.
+
+```{r, fig.height = 30, fig.width = 12}
+all_gene_ens <- sub(".*_ENSMUSG", "ENSMUSG", rownames(dds))
+
+result <- run_gprofiler_all(gene_table = sig_genes$DE_genes,
+                            pos_name = control,
+                            neg_name = treatment,
+                            custom_bg = all_gene_ens,
+                            save_dir = file.path(params$output_dir, "GSE_files"),
+                            plot_dir = file.path(params$output_dir, "images",
+                                                 "GSE"))
+
+plots <- result$plots
+
+plot_grid(plots$GOBP, plots$GOMF, plots$GOCC, plots$KEGG,
+          nrow = 4,
+          ncol = 1,
+          align = "v",
+          axis = "tb")
+
+```

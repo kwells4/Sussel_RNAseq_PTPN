@@ -18,7 +18,7 @@ module load bbtools/38.86
 
 # LSF arguments
 args=' 
-  -q rna 
+  -q rna
   -o {log}.out 
   -e {log}.err 
   -J {params.job_name} 

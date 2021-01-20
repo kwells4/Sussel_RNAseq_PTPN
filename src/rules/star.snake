@@ -20,12 +20,12 @@ def _get_input(wildcards):
 
 def _get_input_star(wildcards):
     # Grab path of the fastq file
-    fastq1 = (wildcards.results + "/" + wildcards.trim_method + "/" + wildcards.sample +
-        "_R1_trimmed.fastq.gz")
+    fastq1 = (wildcards.results + "/" + wildcards.trim_method + "_trim/" +
+        wildcards.sample + "_R1_trimmed.fastq.gz")
     if IS_PAIRED:
         # Grab path of second read
-        fastq2 = (wildcards.results + "/" + wildcards.trim_method + "/" + wildcards.sample +
-            "_R2_trimmed.fastq.gz")
+        fastq2 = (wildcards.results + "/" + wildcards.trim_method + "_trim/" +
+            wildcards.sample + "_R2_trimmed.fastq.gz")
         return(fastq1, fastq2)
     else:
         return(fastq1)

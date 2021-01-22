@@ -7,7 +7,7 @@ control <- comparison[1]
 treatment <- comparison[2]
 
 # Create section title
-sect_title <- paste0(control, "_vs_", treatment)
+sect_title <- paste0(control, " vs ", treatment)
 
 
 ```

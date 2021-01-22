@@ -15,9 +15,9 @@ params:
   genome: "GRCm38"
   DE_alpha: 0.05
   DE_lfc: 1
-  counts: "results/PTPN_KO_countTable_no_trim.txt"
+  counts: "results/PTPN_KO_countTable_cutadapt_trim.txt"
   fastqc: "results/fastqc_summary.tsv"
-  star_stats: "results/star_summary_no_trim.tsv"
+  star_stats: "results/star_summary_cutadapt_trim.tsv"
   output_dir: "results/R_analysis"
   sample_info: "files/sample_info.csv"
   sample_column: "group"
@@ -35,6 +35,10 @@ params:
       - "Gbp5"
       - "Cxcl1"
       - "Pomc"
+      - "Chl1" #https://pubmed.ncbi.nlm.nih.gov/32184019/
+      - "Npy"
+      - "Il33"
+      - "Robo1"
 ---
 ```{r, setup, include=FALSE}
 knitr::opts_knit$set(root.dir = "/Users/wellskr/Documents/Analysis/Lori_sussel/Young_Kim/Sussel_RNASeq_PTPN/")
@@ -410,7 +414,9 @@ gost_plots <- function(results_table, source, title){
   source_results <- results_table[grep(source, results_table$source), ]
   if (nrow(source_results) > 0) {
     source_results <- source_results[order(source_results$precision), ]
-    source_results <- source_results[1:40, ]
+    if(nrow(source_results) > 40){
+      source_results <- source_results[1:40, ]
+    }
     source_results$term_name <- factor(source_results$term_name, levels = 
                                    unique(source_results$term_name))
     source_results$log_padj <- -log10(source_results$p_value)

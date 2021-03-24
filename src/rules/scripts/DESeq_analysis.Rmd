@@ -20,6 +20,8 @@ params:
   star_stats: "results/star_summary_cutadapt_trim.tsv"
   output_dir: "results/R_analysis"
   sample_info: "files/sample_info.csv"
+  cytokine_treated_gene_list: "files/WT_vs_KO_cytokine_RNA_Seq_categorized.xlsx"
+  untreated_gene_list: "files/WT_vs_KO_Non_treated_RNA_Seq_categorized.xlsx"
   sample_column: "group"
   comparisons:
     value: 
@@ -82,7 +84,7 @@ install_packages(c(
   "ggrepel",  "devtools", 
   "gprofiler2", "viridis",
   "RColorBrewer", "ashr",
-  "apeglm"
+  "apeglm", "openxlsx"
 ))
 
 # Install Bioconductor packages
@@ -185,7 +187,7 @@ get_de <- function(object, column, var1, var2, write_csv = F,
 }
 
 # Function to make a heatmap
-make_heatmap <- function(dds, de_genes, treatment, control, group,
+make_heatmap <- function(dds, vsd, de_genes, treatment, control, group, 
                          print_genenames = FALSE, gene_identifier = "Gene_ID",
                          cluster_cols = FALSE, save_heatmap = TRUE,
                          output_dir = "/results/", plot_groups = "all",
@@ -196,8 +198,15 @@ make_heatmap <- function(dds, de_genes, treatment, control, group,
   sample_info <- colData(dds)
   colnames(df) <- group
   rownames(df) <- rownames(colData(dds))
-  # Pull out DE genes from the test we ran earlier, start with Gata6 KO
-  genes <- rownames(de_genes)
+  
+  # grab genes
+  if(isS4(de_genes)){
+    genes <- rownames(de_genes)
+  } else if (is.character(de_genes)){
+    genes <- de_genes
+  } else {
+    stop("de_genes must be a S4 output from DESeq2 (res$DE_genes) or a list of genes")
+  }
   if(is.null(color_test)){
     color_test <- brewer.pal(length(levels(dds[[group]])), "Set1")
     names(color_test) <- levels(dds[[group]])
@@ -246,7 +255,8 @@ make_heatmap <- function(dds, de_genes, treatment, control, group,
                       show_rownames = print_genenames,
                       show_colnames = TRUE, annotation_col = df,
                       annotation_colors = coloring, color = blueYellow,
-                      border_color = NA, clustering_method = "complete")
+                      border_color = NA, clustering_method = "complete",
+                      silent = TRUE)
   
   if(save_heatmap){
     comparison <- paste0(control, "_vs_", treatment, ".pdf")
@@ -773,6 +783,38 @@ gene_chunks <- params$genes %>%
 ```
 
 `r knit_child(text = gene_chunks)`
+
+# Heatmaps
+
+## Cytokine treated samples {.tabset}
+```{r "Read in gene lists cytokine"}
+gene_lists <- openxlsx::getSheetNames(params$cytokine_treated_gene_list)
+gene_file <- params$cytokine_treated_gene_list
+
+control <- "WT_Cytokine_Treatment"
+treatment <- "PTPN2_KO_Cytokine_Treatment"
+
+heatmap_chunks <- gene_lists %>%
+  map(~knit_expand("src/rules/scripts/heatmap_template.Rmd"))
+
+```
+
+`r knit_child(text = heatmap_chunks)`
+
+## Non cytokine treated samples {.tabset}
+```{r "Read in gene lists non treated", fig.height=8, fig.width=10}
+gene_lists <- openxlsx::getSheetNames(params$untreated_gene_list)
+gene_file <- params$untreated_gene_list
+
+control <- "WT_NoTreatment"
+treatment <- "PTPN2_KO_NoTreatment"
+
+heatmap_chunks <- gene_lists %>%
+  map(~knit_expand("src/rules/scripts/heatmap_template.Rmd"))
+
+```
+
+`r knit_child(text = heatmap_chunks)`
 
 # Session Info
 

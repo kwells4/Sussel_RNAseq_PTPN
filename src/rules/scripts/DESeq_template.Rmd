@@ -42,6 +42,7 @@ Heatmap of DE genes across all samples
 ```{r, fig.width = 6, fig.height = 4}
 heatmap_dir <- file.path(params$output_dir, "images", "heatmaps")
 heatmap <- make_heatmap(dds = dds,
+                        vsd = vsd,
                         de_genes = sig_genes$DE_genes,
                         treatment = treatment,
                         control = control,
@@ -60,6 +61,7 @@ Heatmap of DE genes across only the samples used in the comparision
 ```{r, fig.width = 6, fig.height = 4}
 heatmap_dir <- file.path(params$output_dir, "images", "heatmaps")
 heatmap <- make_heatmap(dds = dds,
+                        vsd = vsd,
                         de_genes = sig_genes$DE_genes,
                         treatment = treatment,
                         control = control,

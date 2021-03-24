@@ -1,0 +1,13 @@
+.*
+!.gitignore
+raw_data
+results/fastqc/*.txt
+results/fastqc/*.zip
+results/featureCount_no_trim
+results/logs
+results/star_no_trim
+logs
+results/R_analysis/images
+results/R_analysis/GSE_files/*.rds
+src/rules/scripts/*.html
+*.xlsx

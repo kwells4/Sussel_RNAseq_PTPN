@@ -1,2 +1,2 @@
-results/fastqc/* linguist-generated
+results/fastqc/*.html linguist-generated
 results/R_analysis/*.html linguist-generated

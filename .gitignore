@@ -12,3 +12,5 @@ results/R_analysis/images
 results/R_analysis/GSE_files/*.rds
 src/rules/scripts/*.html
 *.xlsx
+.Rproj.user
+results/R_analysis/objs/*

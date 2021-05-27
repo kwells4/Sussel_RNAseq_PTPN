@@ -821,3 +821,11 @@ heatmap_chunks <- gene_lists %>%
 ```{r}
 sessionInfo()
 ```
+
+```{r}
+ifelse(!dir.exists(file.path(params$output_dir, "objs")),
+       dir.create(file.path(params$output_dir, "objs")), FALSE)
+saveRDS(dds, paste0(params$output_dir, "/objs/dds_obj.rda"))
+
+saveRDS(vsd, paste0(params$output_dir, "/objs/vsd_obj.rda"))
+```

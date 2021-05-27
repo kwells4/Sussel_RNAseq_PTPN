@@ -41,7 +41,7 @@ heatmap_1 <- make_heatmap(dds = dds,
                           control = control,
                           group = params$sample_column,
                           print_genenames = TRUE,
-                          cluster_cols = TRUE,
+                          cluster_cols = FALSE,
                           save_heatmap = FALSE,
                           color_test = sample_colors)
 print(heatmap_1)
@@ -58,7 +58,7 @@ heatmap_2 <- make_heatmap(dds = dds,
                           control = control,
                           group = params$sample_column,
                           print_genenames = TRUE,
-                          cluster_cols = TRUE,
+                          cluster_cols = FALSE,
                           save_heatmap = FALSE,
                           plot_groups = c(treatment, control),
                           color_test = sample_colors)

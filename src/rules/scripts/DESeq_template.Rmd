@@ -1,31 +1,78 @@
 ```{r echo = F}
 
 # Strings to match samples and create labels
-comparison <- c("{{.x[1]}}", "{{.x[2]}}")
+interaction <- "{{interaction}}"
+if(interaction){
+  sect_title <-  "{{.x[1]}}"
 
-control <- comparison[1]
-treatment <- comparison[2]
+  de_test <- "{{.x[[2]]}}"
+  comparison <- "{{.x[3]}}"
 
-# Create section title
-sect_title <- paste0(control, " vs ", treatment)
+  # Get numeric values
+  de_test <- unlist(strsplit(de_test, ""))
 
+  # Fix any 0.5s if there are any
+  pt_loc <- grep("\\.", de_test)
+  if (length(pt_loc) > 0){
+    de_test[pt_loc + 1] <- paste0(de_test[pt_loc - 1], ".", de_test[pt_loc + 1])
+  
+    de_test <- de_test[-(c(pt_loc, pt_loc - 1))]
+  }
 
+  # Fix any minus signs if there are any
+  minus_loc <- grep("-", de_test)
+  if (length(minus_loc) > 0){
+    de_test[minus_loc + 1] <- paste0("-", de_test[minus_loc + 1])
+  
+    de_test <- de_test[-minus_loc]
+  }
+
+  de_test <- as.numeric(de_test)
+
+  comparison <- unlist(strsplit(comparison, split = ":"))
+  control <- comparison[2]
+  treatment <- comparison[1]
+} else {
+  comparison <- c("{{.x[1]}}", "{{.x[2]}}")
+
+  control <- comparison[1]
+  treatment <- comparison[2]
+
+  # Create section title
+  sect_title <- paste0(control, " vs ", treatment)
+}
 ```
 
 ## **`r sect_title`**
 
-```{r}
+```{r run-de-{{.x[1]}}}
 # Extract DE genes
-sig_genes <- get_de(dds, params$sample_column, control, treatment,
-                    write_csv = T, p_value = params$DE_alpha,
-                    lfc = 0, output_dir = params$output_dir,
-                    lfc_shrink = T)
+if(interaction){
+  sig_genes <- get_de(dds, de_test = de_test, interaction = interaction,
+                      var1 = treatment, var2 = control,
+                      write_csv = T, p_value = params$DE_alpha,
+                      lfc = 0, output_dir = params$output_dir,
+                      lfc_shrink = T, save_name = sect_title)
 
-sig_genes_high_lfc <- get_de(dds, params$sample_column, control, treatment,
-                             write_csv = F, p_value = params$DE_alpha,
-                             lfc = params$DE_lfc,
-                             lfc_shrink = T)
+  sig_genes_high_lfc <- get_de(dds, de_test = de_test,
+                               interaction = interaction, write_csv = F,
+                               p_value = params$DE_alpha,
+                               lfc = params$DE_lfc,
+                               lfc_shrink = T)
+} else {
+  sig_genes <- get_de(dds, column = params$sample_column, var1 = treatment,
+                      var2 = control, interaction = interaction,
+                      write_csv = T, p_value = params$DE_alpha,
+                      lfc = 0, output_dir = params$output_dir,
+                      lfc_shrink = T, save_name = sect_title)
 
+  sig_genes_high_lfc <- get_de(dds, column = params$sample_column,
+                               var1 = control, var2 = treatment,
+                               interaction = interaction, write_csv = F,
+                               p_value = params$DE_alpha,
+                               lfc = params$DE_lfc,
+                               lfc_shrink = T)
+}
 DE_genes_n <- nrow(sig_genes$DE_genes)
 ```
 
@@ -34,12 +81,12 @@ DE_genes_n <- nrow(sig_genes$DE_genes)
 
 Differentially expressed genes are labeled on the MA plot in blue.
 ```{r, fig.width = 6, fig.height = 4}
-plotMA(sig_genes$DE_df, main = paste0(control, " vs ", treatment))
+plotMA(sig_genes$DE_df, main = sect_title)
 ```
 
 ### Heatmaps
 Heatmap of DE genes across all samples
-```{r, fig.width = 6, fig.height = 4}
+```{r heatmaps-{{.x[1]}}, fig.width = 6, fig.height = 4}
 heatmap_dir <- file.path(params$output_dir, "images", "heatmaps")
 heatmap <- make_heatmap(dds = dds,
                         vsd = vsd,
@@ -51,14 +98,15 @@ heatmap <- make_heatmap(dds = dds,
                         cluster_cols = FALSE,
                         save_heatmap = TRUE,
                         output_dir = heatmap_dir,
-                        color_test = sample_colors)
+                        color_test = sample_colors,
+                        save_name = sect_title)
 print(heatmap)
 
 ```
 
 Heatmap of DE genes across only the samples used in the comparision
 
-```{r, fig.width = 6, fig.height = 4}
+```{r heatmaps2-{{.x[1]}}, fig.width = 6, fig.height = 4}
 heatmap_dir <- file.path(params$output_dir, "images", "heatmaps")
 heatmap <- make_heatmap(dds = dds,
                         vsd = vsd,
@@ -79,18 +127,38 @@ print(heatmap)
 
 For Gene Set Enrichment, I used `gprofiler2` It uses a hypergeometric test to determine overrepresentation of genes from different categories.
 
-```{r, fig.height = 30, fig.width = 12}
+```{r gse-{{.x[1]}}, fig.height = 30, fig.width = 12}
 all_gene_ens <- sub(".*_ENSMUSG", "ENSMUSG", rownames(dds))
 
 result <- run_gprofiler_all(gene_table = sig_genes$DE_genes,
-                            pos_name = control,
-                            neg_name = treatment,
+                            pos_name = treatment,
+                            neg_name = control,
                             custom_bg = all_gene_ens,
                             save_dir = file.path(params$output_dir, "GSE_files"),
                             plot_dir = file.path(params$output_dir, "images",
-                                                 "GSE"))
+                                                 "GSE"),
+                            save_name = sect_title)
 
 plots <- result$plots
+gost_table <- result[[paste0(treatment, "_vs_", control)]]$result
+
+save_gost <- c("GO:BP", "GO:CC", "GO:MF", "KEGG")
+
+gost_file <- openxlsx::createWorkbook()
+
+invisible(lapply(save_gost, function(x){
+  save_table <- gost_table %>%
+    dplyr::filter(source == x)
+  sheetname <- sub(":", "_", x)
+  openxlsx::addWorksheet(wb = gost_file, sheetName = sheetname)
+  openxlsx::writeData(wb = gost_file, sheet = sheetname, x = save_table)
+}))
+
+openxlsx::saveWorkbook(wb = gost_file,
+                       file = paste0(params$output_dir, "/GSE_files/", 
+                                     sect_title, 
+                                     "_GSE.xlsx"),
+                       overwrite = TRUE)
 
 plot_grid(plots$GOBP, plots$GOMF, plots$GOCC, plots$KEGG,
           nrow = 4,

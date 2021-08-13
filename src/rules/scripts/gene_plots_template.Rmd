@@ -11,7 +11,7 @@ sect_title <- gene
 ```
 
 ## **`r sect_title`**
-```{r, fig.width = 6, fig.height = 4, message = F}
+```{r gene-plot-{{.x}}, fig.width = 6, fig.height = 4, message = F}
 all_gene_names <- rownames(dds)
 all_gene_ids <- sub("_ENSMUSG.*", "", all_gene_names)
 plot <- plot_genes(gene_id = gene,

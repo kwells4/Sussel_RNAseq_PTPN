@@ -1,0 +1,50 @@
+```{r echo = F}
+
+# Strings to match samples and create labels
+interaction <- "{{interaction}}"
+if(interaction){
+  sect_title <-  "{{.x[1]}}"
+
+  de_test <- "{{.x[[2]]}}"
+  comparison <- "{{.x[3]}}"
+  print(de_test)
+  print(comparison)
+  # Get numeric values
+  de_test <- unlist(strsplit(de_test, ""))
+
+  # Fix any 0.5s if there are any
+  pt_loc <- grep("\\.", de_test)
+  if (length(pt_loc) > 0){
+    de_test[pt_loc + 1] <- paste0(de_test[pt_loc - 1], ".", de_test[pt_loc + 1])
+  
+    de_test <- de_test[-(c(pt_loc, pt_loc - 1))]
+  }
+
+  # Fix any minus signs if there are any
+  minus_loc <- grep("-", de_test)
+  if (length(minus_loc) > 0){
+    de_test[minus_loc + 1] <- paste0("-", de_test[minus_loc + 1])
+  
+    de_test <- de_test[-minus_loc]
+  }
+
+  de_test <- as.numeric(de_test)
+
+  comparison <- unlist(strsplit(comparison, split = ":"))
+  print(de_test)
+} else {
+  comparison <- c("{{.x[1]}}", "{{.x[2]}}")
+
+  control <- comparison[1]
+  treatment <- comparison[2]
+
+  # Create section title
+  sect_title <- paste0(control, " vs ", treatment)
+}
+
+sig_genes <- get_de(dds, de_test = de_test, interaction = interaction,
+                      write_csv = T, p_value = params$DE_alpha,
+                      lfc = 0, output_dir = params$output_dir,
+                      lfc_shrink = T)
+
+```

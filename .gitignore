@@ -9,8 +9,10 @@ results/logs
 results/star_no_trim
 logs
 results/R_analysis/images
-results/R_analysis/GSE_files/*.rds
+results/R_analysis/GSE_files/*
 src/rules/scripts/*.html
 *.xlsx
 .Rproj.user
 results/R_analysis/objs/*
+results/R_analysis_test/*
+results/*

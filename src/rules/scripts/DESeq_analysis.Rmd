@@ -18,7 +18,7 @@ params:
   counts: "results/PTPN_KO_countTable_cutadapt_trim.txt"
   fastqc: "results/fastqc_summary.tsv"
   star_stats: "results/star_summary_cutadapt_trim.tsv"
-  output_dir: "results/R_analysis"
+  output_dir: "results/R_analysis_test"
   sample_info: "files/sample_info.csv"
   cytokine_treated_gene_list: "files/WT_vs_KO_cytokine_RNA_Seq_categorized.xlsx"
   untreated_gene_list: "files/WT_vs_KO_Non_treated_RNA_Seq_categorized.xlsx"
@@ -41,6 +41,24 @@ params:
       - "Npy"
       - "Il33"
       - "Robo1"
+      - "Rnasel"
+      - "Gbp8"
+      - "Serpina3i"
+      - "Raet1e"
+      - "Ggt1"
+      - "Apol7a"
+      - "Pcyt1b"
+      - "Rps3a1"
+      - "Bmp7"
+      - "Mapk13"
+      - "Sec22c"
+      - "Clu"
+      - "Pink1"
+      - "Lrrtm4"
+      - "Mecom"
+      - "Cnnm2"
+      - "Serpina3n"
+      - "Perp"
 ---
 ```{r, setup, include=FALSE}
 knitr::opts_knit$set(root.dir = "/Users/wellskr/Documents/Analysis/Lori_sussel/Young_Kim/Sussel_RNASeq_PTPN/")
@@ -158,12 +176,18 @@ get_distances <- function(vsd){
 }
 
 # Function to return sig genes for a comparison
-get_de <- function(object, column, var1, var2, write_csv = F,
+get_de <- function(object, column = NULL, var1 = NULL, var2 = NULL,
+                   write_csv = F, de_test = NULL, interaction = FALSE,
                    p_value = 0.05, lfc = 0.5, lfc_shrink = TRUE,
-                   output_dir){
-  res <- DESeq2::results(object, contrast = c(column, var1, var2))
+                   output_dir = NULL, save_name = NULL){
+  if(interaction){
+    contrast = de_test
+  } else {
+    contrast = c(column, var1, var2)
+  }
+  res <- DESeq2::results(object, contrast = contrast)
   if(lfc_shrink){
-    res <- DESeq2::lfcShrink(object, contrast = c(column, var1, var2),
+    res <- DESeq2::lfcShrink(object, contrast = contrast,
                              res = res, type = "ashr")
   }
   resOrdered <- res[order(res$pvalue), ]
@@ -177,7 +201,7 @@ get_de <- function(object, column, var1, var2, write_csv = F,
   # Place the new columns at the front
   sigGenes <- sigGenes[ , c("gene_name", "ens_id", sigGenes_colnames)]
   if(write_csv){
-    file_name <- paste0(var1, "_vs_", var2, ".csv")
+    file_name <- paste0(save_name, ".csv")
     write.csv(sigGenes,
               file = file.path(output_dir, "DE_files", file_name),
               row.names = FALSE)
@@ -191,7 +215,7 @@ make_heatmap <- function(dds, vsd, de_genes, treatment, control, group,
                          print_genenames = FALSE, gene_identifier = "Gene_ID",
                          cluster_cols = FALSE, save_heatmap = TRUE,
                          output_dir = "/results/", plot_groups = "all",
-                         color_test = NULL){
+                         color_test = NULL, save_name = NULL){
   # First make a "col data" data frame. This is just telling
   # pheatmap what you want to use to color the columns.
   df <- as.data.frame(colData(dds)[,c(group)])
@@ -259,7 +283,7 @@ make_heatmap <- function(dds, vsd, de_genes, treatment, control, group,
                       silent = TRUE)
   
   if(save_heatmap){
-    comparison <- paste0(control, "_vs_", treatment, ".pdf")
+    comparison <- paste0(save_name, ".pdf")
     pdf(file.path(output_dir, comparison), width = 10, height = 10)
     print(heatmap)
     dev.off()
@@ -363,14 +387,14 @@ run_gprofiler_all <- function(gene_table, pos_name, neg_name,
                              correction_method = "gSCS",
                              exclude_iea = FALSE,
                              save_dir = NULL,
-                             plot_dir = NULL){
+                             plot_dir = NULL,
+                             save_name = NULL){
   
-  # Here we order by the log fold change so that "ordered_query" can be true
-  gene_table <- gene_table[order(gene_table$log2FoldChange),]
+  # Because they are now all combined, we don't want to order
   sig_genes <- rev(gene_table$ens_id)
   gost_res <- gost(query = sig_genes,
                    organism = "mmusculus",
-                   ordered_query = TRUE,
+                   ordered_query = FALSE,
                    exclude_iea = exclude_iea,
                    user_threshold = 0.05,
                    correction_method = correction_method,
@@ -379,14 +403,17 @@ run_gprofiler_all <- function(gene_table, pos_name, neg_name,
   sig_res <- gost_res$result[gost_res$result$significant == TRUE, ]
 
   if (!is.null(save_dir)){
-    save_name <- paste0(pos_name, "_vs_", neg_name, ".csv")
-    save_rds <- paste0(pos_name, "_vs_", neg_name, ".rds")
+    save_name <- paste0(save_name, ".csv")
+    save_rds <- paste0(save_name, ".rds")
     saveRDS(gost_res, file = file.path(save_dir, save_rds))
     if(nrow(sig_res) > 1){
       sig_res_csv <- apply(sig_res, 2, as.character)
       write.csv(sig_res_csv, file = file.path(save_dir, save_name))
     }
   }
+  plot_name <- paste0(pos_name, "_vs_", neg_name)
+  return_list <- list(gost_res)
+  names(return_list) <- c(plot_name)
   if (!is.null(plot_dir)){
     save_name <- paste0(pos_name, "_vs_", neg_name, ".pdf")
     
@@ -395,7 +422,6 @@ run_gprofiler_all <- function(gene_table, pos_name, neg_name,
     
     # These make the plots
     plots <- list()
-    plot_name <- paste0(pos_name, "_vs_", neg_name)
     plots$GOBP <- gost_plots(sig_res, "GO:BP", plot_name)
     plots$GOMF <- gost_plots(sig_res, "GO:MF", plot_name)
     plots$GOCC <- gost_plots(sig_res, "GO:CC", plot_name)
@@ -410,14 +436,9 @@ run_gprofiler_all <- function(gene_table, pos_name, neg_name,
     
     # This closes the pdf
     dev.off()
-    
-
+    return_list$plots <- plots_list
   }
-  return_list <- list(gost_res)
-  names(return_list) <- c(plot_name)
-  return_list$plots <- plots_list
   return(return_list)
-  
 }
 
 gost_plots <- function(results_table, source, title){
@@ -718,14 +739,39 @@ Principal component analysis was performed to assess similarities between sample
 
 ```{r "Run DESeq2 and create PCA plot", fig.width = 6, fig.height = 4}
 # This makes a DESeq2 object where the count data is our count matrix and the colData is our sample data. I am currently making the design based on "group" but we can change this if necessary
+sample_table$genotype <- factor(sample_table$genotype,
+                                levels = c("PTPN2_KO", "WT"))
+sample_table$treatment <- factor(sample_table$treatment,
+                                 levels = c("Cytokine_Treatment", "No_Treatment"))
+sample_table$group <- factor(sample_table$group,
+                                levels = c("PTPN2_KO_Cytokine_Treatment",
+                                           "PTPN2_KO_NoTreatment",
+                                           "WT_Cytokine_Treatment",
+                                           "WT_NoTreatment"))
 dds <- DESeqDataSetFromMatrix(countData = count_table,
                               colData = sample_table,
-                              design = formula(paste("~",
-                                                     params$sample_column)))
+                              #design = formula(paste("~",
+                              #                       params$sample_column))
+                              design = ~genotype + treatment + 
+                                genotype:treatment)
+
 # Here we get rid of all the genes that are not expressed
 keep <- rowSums(counts(dds)) >= 10
 dds <- dds[keep,]
 dds <- DESeq(dds)
+
+# Create a model
+mod_mat <- model.matrix(design(dds), colData(dds))
+
+PTPN2_non <- colMeans(mod_mat[dds$genotype == "PTPN2_KO" &
+                             dds$treatment == "No_Treatment", ])
+PTPN2_Cyto <- colMeans(mod_mat[dds$genotype == "PTPN2_KO" &
+                              dds$treatment == "Cytokine_Treatment", ])
+WT_Non <- colMeans(mod_mat[dds$genotype == "WT" &
+                             dds$treatment == "No_Treatment", ])
+WT_Cyto <- colMeans(mod_mat[dds$genotype == "WT" &
+                              dds$treatment == "Cytokine_Treatment", ])
+
 # This transforms the counts to have constant variance. This helps ensue that highly or lowly expressed genes will not contribute too much for the PCA or clustering analysis
 vsd <- vst(dds, blind = F)
 
@@ -761,8 +807,29 @@ ifelse(!dir.exists(file.path(params$output_dir, "GSE_files")),
 ```
 
 ```{r "Run differential experession chunks", echo = F}
-DE_chunks <- params$comparisons %>%
-  map(~knit_expand("src/rules/scripts/DESeq_template.Rmd"))
+contrasts <- list(
+  list("PTPN2_WT_noTrt", (PTPN2_non - WT_Non),
+       "PTPN2_KO_NoTreatment:WT_NoTreatment"),
+  list("WT_trt", (WT_Non - WT_Cyto),
+       "WT_Cytokine_Treatment:WT_NoTreatment"),
+  list("PTPN2_trt", (PTPN2_non - PTPN2_Cyto),
+       "PTPN2_KO_Cytokine_Treatment:PTPN2_KO_NoTreatment"),
+  list("PTPN2_WT_Trt", (PTPN2_Cyto - WT_Cyto),
+       "PTPN2_KO_Cytokine_Treatment:WT_Cytokine_Treatment"),
+  list("PTPN2_specific_trt", ((PTPN2_non - PTPN2_Cyto) - (WT_Non - WT_Cyto)),
+       "PTPN2_KO_Cytokine_Treatment:PTPN2_KO_NoTreatment")
+  )
+
+#DE_chunks <- params$comparisons %>%
+#  map(~knit_expand(file ="src/rules/scripts/DESeq_template.Rmd",
+#                   interaction = FALSE))
+
+de_template <- "src/rules/scripts/DESeq_template.Rmd"
+#de_template <- "src/rules/scripts/test_contrast.Rmd"
+
+DE_chunks <- contrasts %>%
+  map(~knit_expand(file = de_template,
+                   interaction = TRUE))
 ```
 
 `r knit_child(text = DE_chunks)`

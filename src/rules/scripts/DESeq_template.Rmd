@@ -59,6 +59,12 @@ if(interaction){
                                p_value = params$DE_alpha,
                                lfc = params$DE_lfc,
                                lfc_shrink = T)
+  
+  sig_genes_all <- get_de(dds, de_test = de_test, interaction = interaction,
+                          var1 = treatment, var2 = control,
+                          write_csv = T, p_value = 1,
+                          lfc = 0, output_dir = params$output_dir,
+                          lfc_shrink = T, save_name = paste0(sect_title, "_all"))
 } else {
   sig_genes <- get_de(dds, column = params$sample_column, var1 = treatment,
                       var2 = control, interaction = interaction,
@@ -72,6 +78,11 @@ if(interaction){
                                p_value = params$DE_alpha,
                                lfc = params$DE_lfc,
                                lfc_shrink = T)
+  all_genes_all <- get_de(dds, column = params$sample_column, var1 = treatment,
+                          var2 = control, interaction = interaction,
+                          write_csv = T, p_value = 1,
+                          lfc = 0, output_dir = params$output_dir,
+                          lfc_shrink = T, save_name = paste0(sect_title, "_all"))
 }
 DE_genes_n <- nrow(sig_genes$DE_genes)
 ```
@@ -127,7 +138,7 @@ print(heatmap)
 
 For Gene Set Enrichment, I used `gprofiler2` It uses a hypergeometric test to determine overrepresentation of genes from different categories.
 
-```{r gse-{{.x[1]}}, fig.height = 30, fig.width = 12}
+```{r gse-{{.x[1]}}, fig.height = 30, fig.width = 12, eval = FALSE}
 all_gene_ens <- sub(".*_ENSMUSG", "ENSMUSG", rownames(dds))
 
 result <- run_gprofiler_all(gene_table = sig_genes$DE_genes,

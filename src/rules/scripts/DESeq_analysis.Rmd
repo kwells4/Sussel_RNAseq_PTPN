@@ -18,7 +18,7 @@ params:
   counts: "results/PTPN_KO_countTable_cutadapt_trim.txt"
   fastqc: "results/fastqc_summary.tsv"
   star_stats: "results/star_summary_cutadapt_trim.tsv"
-  output_dir: "results/R_analysis_test"
+  output_dir: "results/R_analysis"
   sample_info: "files/sample_info.csv"
   cytokine_treated_gene_list: "files/WT_vs_KO_cytokine_RNA_Seq_categorized.xlsx"
   untreated_gene_list: "files/WT_vs_KO_Non_treated_RNA_Seq_categorized.xlsx"
@@ -384,7 +384,7 @@ run_gprofiler <- function(gene_table, pos_name, neg_name,
 # Run gprofiler on all DE genes
 run_gprofiler_all <- function(gene_table, pos_name, neg_name,
                              custom_bg = FALSE, 
-                             correction_method = "gSCS",
+                             correction_method = "g_SCS",
                              exclude_iea = FALSE,
                              save_dir = NULL,
                              plot_dir = NULL,

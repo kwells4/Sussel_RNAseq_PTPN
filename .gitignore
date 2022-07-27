@@ -16,3 +16,4 @@ src/rules/scripts/*.html
 results/R_analysis/objs/*
 results/R_analysis_test/*
 results/*
+manuscript/*

@@ -25,10 +25,10 @@ params:
   sample_column: "group"
   comparisons:
     value: 
-      - ["WT_NoTreatment",        "PTPN2_KO_NoTreatment"]
-      - ["WT_NoTreatment",        "WT_Cytokine_Treatment"]
-      - ["PTPN2_KO_NoTreatment",  "PTPN2_KO_Cytokine_Treatment"]
-      - ["WT_Cytokine_Treatment", "PTPN2_KO_Cytokine_Treatment"]
+      - ["PTPN2_KO_NoTreatment",        "WT_NoTreatment"]
+      - ["WT_Cytokine_Treatment",       "WT_NoTreatment"]
+      - ["PTPN2_KO_Cytokine_Treatment", "PTPN2_KO_NoTreatment"]
+      - ["PTPN2_KO_Cytokine_Treatment", "WT_Cytokine_Treatment"]
   genes:
     value:
       - "Ins1"

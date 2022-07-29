@@ -810,6 +810,8 @@ ifelse(!dir.exists(file.path(params$output_dir, "GSE_files")),
 contrasts <- list(
   list("PTPN2_WT_noTrt", (PTPN2_non - WT_Non),
        "PTPN2_KO_NoTreatment:WT_NoTreatment"),
+  list("WT_PTPN2_noTrt", (WT_Non - PTPN2_non),
+       "WT_NoTreatment:PTPN2_KO_NoTreatment"),
   list("WT_trt", (WT_Non - WT_Cyto),
        "WT_Cytokine_Treatment:WT_NoTreatment"),
   list("PTPN2_trt", (PTPN2_non - PTPN2_Cyto),

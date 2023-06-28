@@ -19,3 +19,4 @@ results/*
 manuscript/*
 files/*.png
 *.html
+files/*/*.pdf
